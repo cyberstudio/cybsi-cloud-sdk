@@ -6,8 +6,33 @@ See Also:
     for complete examples of pagination usage.
 """
 from typing import Callable, Generic, Iterator, List, Optional, TypeVar, cast
+from urllib.parse import parse_qs, urlparse
 
 import httpx
+
+
+class Cursor:
+    """Page cursor value.
+
+    If :data:`None` cursor value is **passed** to SDK
+    (as a parameter to filter-like functions), SDK retrieves the first page.
+
+    Typically, SDK does not **return** cursors as function return values.
+    SDK returns :class:`Page`, and
+    cursor is a property of the page.
+
+    :data:`None` cursor value of a page means last page.
+    """
+
+    pass
+
+
+# This is a hack to prevent Sphinx autodoc-typehint type inlining.
+# If we simply alias Cursor = str, it inlines str everywhere,
+# and functions lose descriptive parameter and return value types.
+# Additionally, this hack prevents SDK users from creating Cursor instances.
+# Users have to call filter()-like methods.
+Cursor.__supertype__ = str  # type: ignore
 
 T = TypeVar("T")
 
@@ -22,6 +47,20 @@ class _BasePage(Generic[T]):
         """Next page link."""
         # TODO: check if it's correct
         return cast(str, self._resp.links.get("next", {}).get("url"))
+
+    @property
+    def cursor(self) -> Optional[Cursor]:
+        """Page cursor. The current position in the collection.
+
+        :data:`None` means the page is last one.
+        """
+        next_url = self._resp.links.get("next", {}).get("url")
+        if next_url is None:
+            return None
+        parsed = urlparse(next_url)
+        query = parse_qs(parsed.query)
+        cursor = query.get("cursor")
+        return cast(Optional[Cursor], cursor[0]) if cursor is not None else None
 
     def data(self) -> List[T]:
         """Get page data as a list of items."""

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Callable, Union
 
-from .auth import APIKeyAuth, APIKeysAPI
+from .auth import APIKeyAuth, AuthAPI
 from .client_config import DEFAULT_LIMITS, DEFAULT_TIMEOUTS, Limits, Timeouts
 from .error import CybsiError
 from .internal import HTTPConnector
@@ -96,9 +96,9 @@ class Client:
         self._connector.close()
 
     @property
-    def api_keys(self) -> APIKeysAPI:
-        """API-Keys API handle."""
-        return APIKeysAPI(self._connector)
+    def auth(self) -> AuthAPI:
+        """Auth API handle."""
+        return AuthAPI(self._connector)
 
     @property
     def iocean(self) -> IOCeanAPI:

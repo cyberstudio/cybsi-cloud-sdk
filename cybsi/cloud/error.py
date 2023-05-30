@@ -177,6 +177,9 @@ class ForbiddenErrorCodes(CybsiAPIEnum):
 class SemanticErrorCodes(CybsiAPIEnum):
     """Semantic error codes."""
 
+    ResourceNotFound = "ResourceNotFound"
+    """Cloud resource not found."""
+
     pass
 
 

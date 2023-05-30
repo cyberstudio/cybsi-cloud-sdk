@@ -1,0 +1,65 @@
+from typing import Optional
+
+from ..error import JsonObject
+from ..internal import BaseAPI, JsonObjectView
+from ..pagination import Cursor, Page
+
+
+class ResourcesAPI(BaseAPI):
+    """Resources API."""
+
+    _path = "/resources"
+
+    def filter(
+        self,
+        *,
+        parent_id: Optional[int] = None,
+        cursor: Optional[Cursor] = None,
+    ) -> Page["ResourceView"]:
+        """Get resources.
+
+        Note:
+            Calls `GET /resources`.
+        Args:
+            parent_id: identifier of parent resource. It must be greater than 0.
+            cursor: Page cursor.
+        Return:
+            Page with resource common views and next page cursor.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+        """
+        params: JsonObject = {}
+        if parent_id is not None:
+            params["parentID"] = parent_id
+        if cursor is not None:
+            params["cursor"] = str(cursor)
+        resp = self._connector.do_get(path=self._path, params=params)
+        page = Page(self._connector.do_get, resp, ResourceView)
+        return page
+
+
+class ResourceRefView(JsonObjectView):
+    @property
+    def id(self) -> int:
+        """API-Key identifier."""
+        return self._get("id")
+
+
+class ResourceView(JsonObjectView):
+    """Resource view."""
+
+    @property
+    def id(self) -> int:
+        """Resource identifier."""
+        return self._get("id")
+
+    @property
+    def name(self) -> str:
+        """Resource name."""
+        return self._get("name")
+
+    @property
+    def parent(self) -> Optional[ResourceRefView]:
+        """Parent resource."""
+        return self._map_optional("parent", ResourceRefView)

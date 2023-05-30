@@ -27,10 +27,12 @@ Auth & API-Keys
 ~~~~~~~~~~~~~~~
 .. autoclass:: cybsi.cloud.auth.APIKeyAuth
 
-.. automodule:: cybsi.cloud.auth.api_key
+.. autoclass:: cybsi.cloud.auth.AuthAPI
+
+.. automodule:: cybsi.cloud.auth
     :members:
     :inherited-members:
-    :exclude-members: APIKeyAuth
+    :exclude-members: APIKeyAuth AuthAPI
 
 IOCean
 ~~~~~~
