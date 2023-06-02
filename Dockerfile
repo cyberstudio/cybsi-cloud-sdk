@@ -8,6 +8,8 @@ RUN apt-get update && \
     apt-get install --no-install-suggests --no-install-recommends --yes \
     make
 
+# install urllib v1.x manually to avoid 'strict' attribute error
+RUN pip3 install "urllib3<2"
 RUN pip3 install poetry==1.1.12
 
 WORKDIR /cybsi_cloud_sdk

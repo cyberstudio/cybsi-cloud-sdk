@@ -61,6 +61,7 @@ docker-clean:
 ################ Helper targets ################
 .PHONY: tools
 tools: #### Install tools needed for development.
+	pip3 install "urllib3<2"
 	pip3 install poetry==1.1.12
 	poetry install
 
