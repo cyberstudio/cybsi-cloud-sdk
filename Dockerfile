@@ -13,6 +13,11 @@ RUN pip3 install "urllib3<2"
 RUN pip3 install poetry==1.1.12
 
 WORKDIR /cybsi_cloud_sdk
-ADD . /cybsi_cloud_sdk
+
+# dependencies for poetry install
+COPY poetry.lock pyproject.toml ./
+COPY ./cybsi/__version__.py ./cybsi/py.typed ./cybsi/
 
 RUN poetry install
+
+ADD . /cybsi_cloud_sdk
