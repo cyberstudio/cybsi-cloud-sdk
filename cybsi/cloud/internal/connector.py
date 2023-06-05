@@ -72,7 +72,12 @@ class HTTPConnector:
         headers[_IF_MATCH_HEADER] = tag
         return self._do("PATCH", path, json=json, **kwargs)
 
-    def do_put(self, path: str, json: Any = None, **kwargs) -> httpx.Response:
+    def do_put(
+        self, path: str, tag: Optional[Tag] = None, json: Any = None, **kwargs
+    ) -> httpx.Response:
+        if tag is not None:
+            headers = kwargs.setdefault("headers", {})
+            headers[_IF_MATCH_HEADER] = tag
         return self._do("PUT", path, json=json, **kwargs)
 
     def do_delete(

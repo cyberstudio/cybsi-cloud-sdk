@@ -1,14 +1,11 @@
 """Use this section of API to access IOCean objects, collections and schemas.
 """
-from ..internal import (
-    BaseAPI,
+
+from .api import IOCeanAPI
+
+from .schemas import (
+    SchemasAPI,
+    SchemaView,
+    SchemaCommonView,
+    SchemaRegistrationView,
 )
-
-
-class IOCeanAPI(BaseAPI):
-    """IOCean API."""
-
-    @property
-    def collections(self):
-        """Get IOCean collections handle."""
-        return None  # TODO: implement CollectionsAPI

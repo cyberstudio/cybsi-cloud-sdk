@@ -126,6 +126,11 @@ class ConflictError(APIError):
     def __init__(self, content: JsonObject) -> None:
         super().__init__(409, content, header="resource already exists")
 
+    @property
+    def code(self) -> "ConflictErrorCodes":
+        """Error code."""
+        return ConflictErrorCodes(self._view.code)
+
 
 class ResourceModifiedError(APIError):
     """Resource was modified since last read. **Retry is a must**.
@@ -174,13 +179,23 @@ class ForbiddenErrorCodes(CybsiAPIEnum):
 
 
 @document_enum
+class ConflictErrorCodes(CybsiAPIEnum):
+    """Conflict error codes."""
+
+    DuplicateSchema = "DuplicateSchema"
+    """Schema with the given schemaID is already registered."""
+
+
+@document_enum
 class SemanticErrorCodes(CybsiAPIEnum):
     """Semantic error codes."""
 
     ResourceNotFound = "ResourceNotFound"
     """Cloud resource not found."""
-
-    pass
+    InvalidSchema = "InvalidSchema"
+    """Schema is not valid by metaschema (JSON schema Draft 2020-12)."""
+    InvalidSchemaID = "InvalidSchemaID"
+    """schemaID parameter can't be changed."""
 
 
 class _ErrorView(dict):

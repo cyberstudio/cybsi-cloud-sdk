@@ -3,6 +3,17 @@
 Examples
 ========
 
+.. _register-object-schema-example:
+
+Register object schema
+----------------------
+
+See :ref:`object_schemas` for information about schemas
+
+In the example below we registering JSON Schema of object.
+
+.. literalinclude:: ../../examples/register_object_schema.py
+
 .. _pagination-example:
 
 Pagination
