@@ -40,6 +40,8 @@ class ResourcesAPI(BaseAPI):
 
 
 class ResourceRefView(JsonObjectView):
+    """Resource reference view."""
+
     @property
     def id(self) -> int:
         """API-Key identifier."""
