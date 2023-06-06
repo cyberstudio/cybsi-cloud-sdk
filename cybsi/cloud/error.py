@@ -50,7 +50,7 @@ class APIError(CybsiError):
         suffix: Optional[str] = None,
     ) -> None:
         self._status = status
-        self._view = _ErrorView(content)
+        self._view = ErrorView(content)
         self._header = (
             header
             if header is not None
@@ -68,7 +68,7 @@ class APIError(CybsiError):
         super().__init__(msg)
 
     @property
-    def content(self) -> JsonObject:
+    def content(self) -> "ErrorView":
         return self._view
 
 
@@ -197,8 +197,18 @@ class SemanticErrorCodes(CybsiAPIEnum):
     InvalidSchemaID = "InvalidSchemaID"
     """schemaID parameter can't be changed."""
 
+    # Objects
+    InvalidKeyFormat = "InvalidKeyFormat"
+    """Object key has invalid format."""
+    InvalidKeySet = "InvalidKeySet"
+    """Object has invalid key set."""
+    KeySetConflict = "KeySetConflict"
+    """Object key intersects with another one."""
+    SchemaCheckFail = "SchemaCheckFail"
+    """Object validation by schema failed."""
 
-class _ErrorView(dict):
+
+class ErrorView(dict):
     """Error returned by Cybsi Cloud API."""
 
     @property
@@ -212,6 +222,34 @@ class _ErrorView(dict):
         """Error message."""
 
         return cast(str, self.get("message"))
+
+    @property
+    def details(self) -> JsonObject:
+        """Error details."""
+
+        return cast(JsonObject, self.get("details"))
+
+
+class SchemaCheckErrorDetails(dict):
+    """Details for schema check error."""
+
+    @property
+    def absolute_keyword_location(self) -> str:
+        """Absolute validation path of validating schema."""
+
+        return cast(str, self.get("AbsoluteKeywordLocation"))
+
+    @property
+    def instance_location(self) -> str:
+        """Location of the json value within the instance being validated."""
+
+        return cast(str, self.get("InstanceLocation"))
+
+    @property
+    def message(self) -> str:
+        """Error description."""
+
+        return cast(str, self.get("Message"))
 
 
 _error_mapping = {

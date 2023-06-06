@@ -14,6 +14,26 @@ In the example below we registering JSON Schema of object.
 
 .. literalinclude:: ../../examples/register_object_schema.py
 
+.. _add_collection_object:
+
+Add object to collection
+------------------------
+
+See :ref:`object_schemas` for information about schemas
+
+In the example below we add object to collection.
+
+.. literalinclude:: ../../examples/add_collection_object.py
+
+.. _delete_collection_object:
+
+Delete object from collection
+-----------------------------
+
+In the example below we delete object from collection.
+
+.. literalinclude:: ../../examples/delete_collection_object.py
+
 .. _pagination-example:
 
 Pagination

@@ -2,7 +2,7 @@
 """
 
 from .api import IOCeanAPI
-
+from .objects import ObjectsAPI, ObjectKeyType, ObjectType
 from .schemas import (
     SchemasAPI,
     SchemaView,
