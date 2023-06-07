@@ -9,13 +9,13 @@ from ..view import _TaggedView
 class SchemasAPI(BaseAPI):
     """Schemas API."""
 
-    _path = "/schemas"
+    _path = "/iocean/schemas"
 
     def register(self, schema: JsonObject) -> "SchemaRegistrationView":
         """Register an object schema.
 
         Note:
-            Calls `POST /schemas`.
+            Calls `POST /iocean/schemas`.
         Args:
             schema: JSON schema of the object. See :ref:`object_schemas`
                 for information about schema structure.
@@ -45,7 +45,7 @@ class SchemasAPI(BaseAPI):
         """Update the object schema.
 
         Note:
-            Calls `PUT /schemas/{schema_id}`.
+            Calls `PUT /iocean/schemas/{schema_id}`.
         Args:
             schema_id: URL friendly string, uniquely identifies json schema.
             tag: :attr:`SchemaView.tag` value. Use :meth:`view` to retrieve it.
@@ -71,7 +71,7 @@ class SchemasAPI(BaseAPI):
         """Get the object schema view.
 
         Note:
-            Calls `GET /schemas/{schema_id}`.
+            Calls `GET /iocean/schemas/{schema_id}`.
         Args:
             schema_id: URL friendly string, uniquely identifies json schema.
         Returns:
@@ -92,7 +92,7 @@ class SchemasAPI(BaseAPI):
         """Get an object schemas filtration list.
 
         Note:
-            Calls `GET /schemas`.
+            Calls `GET /iocean/schemas`.
         Args:
             cursor: Page cursor.
         Returns:

@@ -16,7 +16,7 @@ class CollectionAPI(BaseAPI):
         """Register collection.
 
         Note:
-            Calls `POST /collections`.
+            Calls `POST /iocean/collections`.
         Args:
             collection: collection form.
         Return:
@@ -39,7 +39,7 @@ class CollectionAPI(BaseAPI):
         """Get collection.
 
         Note:
-            Calls `GET /collections/{collectionName}`.
+            Calls `GET /iocean/collections/{collectionName}`.
         Args:
             collection_id: collection's id.
         Return:
@@ -57,7 +57,7 @@ class CollectionAPI(BaseAPI):
         """Update collection
 
         Note:
-            Calls `PATCH /collections/{collectionName}`.
+            Calls `PATCH /iocean/collections/{collectionName}`.
         Args:
             collection_id: collection's id.
             tag: :attr:`CollectionView.tag` value. Use :meth:`view` to retrieve it.
@@ -86,7 +86,7 @@ class CollectionAPI(BaseAPI):
         """Get collections.
 
         Note:
-            Calls `GET /collections`.
+            Calls `GET /iocean/collections`.
         Args:
             cursor: Page cursor.
         Return:

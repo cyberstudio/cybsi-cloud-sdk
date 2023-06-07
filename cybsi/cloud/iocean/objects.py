@@ -34,7 +34,7 @@ class ObjectType(CybsiAPIEnum):
 class ObjectsAPI(BaseAPI):
     """Objects API."""
 
-    _path = "/collections/{}/objects"
+    _path = "/iocean/collections/{}/objects"
 
     def add(
         self,
@@ -52,7 +52,7 @@ class ObjectsAPI(BaseAPI):
         - extends key set of the registered object.
 
         Note:
-            Calls `POST /collections/{collection_id}/objects`.
+            Calls `POST /iocean/collections/{collection_id}/objects`.
         Args:
             collection_id: Collection identifier.
             obj_type: Type of the object.
@@ -88,7 +88,7 @@ class ObjectsAPI(BaseAPI):
         """Delete object from collection.
 
         Note:
-            Calls `DELETE /collections/{collection_id}/objects`.
+            Calls `DELETE /iocean/collections/{collection_id}/objects`.
         Args:
             collection_id: Collection identifier.
             key_type: Key type of object to be removed.

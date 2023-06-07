@@ -8,7 +8,7 @@ from ..pagination import Cursor, Page
 class ResourcesAPI(BaseAPI):
     """Resources API."""
 
-    _path = "/resources"
+    _path = "/auth/resources"
 
     def filter(
         self,
@@ -19,7 +19,7 @@ class ResourcesAPI(BaseAPI):
         """Get resources.
 
         Note:
-            Calls `GET /resources`.
+            Calls `GET /auth/resources`.
         Args:
             parent_id: identifier of parent resource. It must be greater than 0.
             cursor: Page cursor.

@@ -44,7 +44,7 @@ class APIKeyAuth(httpx.Auth):
 
     requires_response_body = True  # instructs httpx to pass token request response body
 
-    _get_token_path = "/token"
+    _get_token_path = "/auth/token"
 
     def __init__(self, *, api_url: str, api_key: str):
         # See https://www.python-httpx.org/advanced/#customizing-authentication
@@ -107,7 +107,7 @@ class APIKeyAuth(httpx.Auth):
 class APIKeysAPI(BaseAPI):
     """API-Keys API."""
 
-    _path = "/keys"
+    _path = "/auth/keys"
 
     def filter(
         self,
@@ -117,7 +117,7 @@ class APIKeysAPI(BaseAPI):
         """Get API keys.
 
         Note:
-            Calls `GET /keys`.
+            Calls `GET /auth/keys`.
         Args:
             cursor: Page cursor.
         Return:
@@ -137,7 +137,7 @@ class APIKeysAPI(BaseAPI):
         """Generate new API-Key.
 
         Note:
-            Calls `POST /keys`.
+            Calls `POST /auth/keys`.
         Args:
             api_key: API-Key.
         Returns:
@@ -163,7 +163,7 @@ class APIKeysAPI(BaseAPI):
         Warning:
             Key revocation is an irreversible operation.
         Note:
-            Calls `POST /keys/{api_key_id}/revoked`.
+            Calls `POST /auth/keys/{api_key_id}/revoked`.
         Args:
             api_key_id: API-Key identifier.
         Raises:
