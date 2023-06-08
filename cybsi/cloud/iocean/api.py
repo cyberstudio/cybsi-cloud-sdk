@@ -1,5 +1,6 @@
 from ..internal import BaseAPI
 from .objects import ObjectsAPI
+from .collection import CollectionAPI
 from .schemas import SchemasAPI
 
 
@@ -9,7 +10,7 @@ class IOCeanAPI(BaseAPI):
     @property
     def collections(self):
         """Get IOCean collections handle."""
-        return None  # TODO: implement CollectionsAPI
+        return CollectionAPI(self._connector)
 
     @property
     def schemas(self) -> SchemasAPI:

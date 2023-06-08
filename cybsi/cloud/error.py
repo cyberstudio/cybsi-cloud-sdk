@@ -184,6 +184,8 @@ class ConflictErrorCodes(CybsiAPIEnum):
 
     DuplicateSchema = "DuplicateSchema"
     """Schema with the given schemaID is already registered."""
+    DuplicateCollection = "DuplicateCollection"
+    """Collection with the given name is already registered."""
 
 
 @document_enum
@@ -196,7 +198,8 @@ class SemanticErrorCodes(CybsiAPIEnum):
     """Schema is not valid by metaschema (JSON schema Draft 2020-12)."""
     InvalidSchemaID = "InvalidSchemaID"
     """schemaID parameter can't be changed."""
-
+    SchemaNotFound = "SchemaNotFound"
+    """The specified schema is not found"""
     # Objects
     InvalidKeyFormat = "InvalidKeyFormat"
     """Object key has invalid format."""

@@ -3,6 +3,15 @@
 
 from .api import IOCeanAPI
 from .objects import ObjectsAPI, ObjectKeyType, ObjectType
+
+from .collection import (
+    CollectionAPI,
+    CollectionForm,
+    CollectionCommonView,
+    CollectionRegistrationView,
+    CollectionView,
+)
+
 from .schemas import (
     SchemasAPI,
     SchemaView,
