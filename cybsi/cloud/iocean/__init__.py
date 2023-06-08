@@ -2,8 +2,6 @@
 """
 
 from .api import IOCeanAPI
-from .objects import ObjectsAPI, ObjectKeyType, ObjectType
-
 from .collection import (
     CollectionAPI,
     CollectionForm,
@@ -11,7 +9,15 @@ from .collection import (
     CollectionRegistrationView,
     CollectionView,
 )
-
+from .objects import (
+    ObjectsAPI,
+    ObjectKeyType,
+    ObjectType,
+    ObjectView,
+    ObjectKeyView,
+    ObjectChangeView,
+    ObjectOperation,
+)
 from .schemas import (
     SchemasAPI,
     SchemaView,

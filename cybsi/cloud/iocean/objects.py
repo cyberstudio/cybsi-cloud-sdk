@@ -1,9 +1,12 @@
-from typing import Iterable, Tuple
+from typing import Iterable, List, Optional, Tuple, cast
+from urllib.parse import parse_qs, urlparse
 
+import httpx
 from enum_tools import document_enum
 
 from ..enum import CybsiAPIEnum
-from ..internal import BaseAPI, JsonObject
+from ..internal import BaseAPI, JsonObject, JsonObjectView
+from ..pagination import Cursor, Page
 
 
 @document_enum
@@ -29,6 +32,18 @@ class ObjectType(CybsiAPIEnum):
     URL = "URL"
     IPAddress = "IPAddress"
     IPNetwork = "IPNetwork"
+
+
+@document_enum
+class ObjectOperation(CybsiAPIEnum):
+    """Object change operation."""
+
+    Add = "Add"
+    """Object was added to collection."""
+    Remove = "Remove"
+    """Object war removed from collection."""
+    Update = "Update"
+    """Object in collection was updated."""
 
 
 class ObjectsAPI(BaseAPI):
@@ -108,3 +123,129 @@ class ObjectsAPI(BaseAPI):
         }
         path = self._path.format(collection_id)
         self._connector.do_delete(path=path, params=params)
+
+    def filter(
+        self, *, collection_id: str, cursor: Optional[Cursor] = None
+    ) -> Tuple[Page["ObjectView"], Optional[Cursor]]:
+        """Get objects from the collection.
+
+        Note:
+            Calls `GET /iocean/collections/{collection_id}/objects`.
+        Args:
+            collection_id: Collection identifier.
+            cursor: Page cursor.
+        Return:
+            Page with object views. The page contains next page cursor.
+            Changes cursor. The cursor can be used to call :meth:`changes`.
+        Note:
+            Changes cursor is returned only on the first page.
+        Raises:
+            :class:`~cybsi.cloud.error.NotFoundError`: Collection not found.
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+        """
+        params: JsonObject = {}
+        if cursor is not None:
+            params["cursor"] = str(cursor)
+        path = self._path.format(collection_id)
+        resp = self._connector.do_get(path=path, params=params)
+        return Page(self._connector.do_get, resp, ObjectView), _extract_changes_cursor(
+            resp
+        )
+
+    def changes(
+        self, *, collection_id: str, cursor: Cursor
+    ) -> Page["ObjectChangeView"]:
+        """Get objects changes from the collection.
+
+        Note:
+            Calls `GET /iocean/collections/{collection_id}/objects/changes`.
+        Args:
+            collection_id: Collection identifier.
+            cursor: Page cursor.
+                On the first request you should pass the cursor value
+                obtained when requesting objects :meth:`filter`.
+                Subsequent calls should use cursor property of the page
+                returned by :meth:`changes`.
+        Return:
+            Page with changes.
+        Warning:
+            Cursor behaviour differs from other API methods.
+
+            Do not save returned page cursor if it is :data:`None`.
+            :data:`None` means that all changes **for this moment** are received.
+            More changes can arrive later. Pass your previous non-none ``cursor``
+            value in loop, until non-none cursor is returned.
+
+            Please wait some time if method returns a page with :data:`None` cursor.
+        Raises:
+            :class:`~cybsi.cloud.error.NotFoundError`: Collection not found.
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+            :class:`~cybsi.cloud.error.SemanticError`: Semantic request error.
+        Note:
+            Semantic error codes specific for this method:
+              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.CursorOutOfRange`
+        """
+        params: JsonObject = {"cursor": cursor}
+        path = self._path.format(collection_id) + "/changes"
+        resp = self._connector.do_get(path=path, params=params)
+        return Page(self._connector.do_get, resp, ObjectChangeView)
+
+
+def _extract_changes_cursor(resp: httpx.Response) -> Optional[Cursor]:
+    """Extracts changes cursor from response."""
+    related_url = resp.links.get("related", {}).get("url")
+    if related_url is None:
+        return None
+    parsed = urlparse(related_url)
+    query = parse_qs(parsed.query)
+    cursor = query["cursor"]
+    return cast(Optional[Cursor], cursor[0]) if cursor is not None else None
+
+
+class ObjectKeyView(JsonObjectView):
+    """Object key view"""
+
+    @property
+    def type(self) -> ObjectKeyType:
+        """Object key type"""
+        return ObjectKeyType.from_string(self._get("type"))
+
+    @property
+    def value(self) -> str:
+        """Key value."""
+        return self._get("value")
+
+
+class ObjectView(JsonObjectView):
+    """Object view."""
+
+    @property
+    def type(self) -> ObjectType:
+        """Object type."""
+        return ObjectType.from_string(self._get("type"))
+
+    @property
+    def keys(self) -> List[ObjectKeyView]:
+        """Object keys."""
+        return [ObjectKeyView(key) for key in self._get("keys")]
+
+    @property
+    def context(self) -> JsonObject:
+        """Object context."""
+        return cast(JsonObject, self._get("context"))
+
+
+class ObjectChangeView(JsonObjectView):
+    """Object change view."""
+
+    @property
+    def operation(self) -> ObjectOperation:
+        """Object operation."""
+        return ObjectOperation.from_string(self._get("operation"))
+
+    @property
+    def obj(self) -> ObjectView:
+        """Object."""
+        return ObjectView(self._get("object"))

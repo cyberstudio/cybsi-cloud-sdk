@@ -200,6 +200,7 @@ class SemanticErrorCodes(CybsiAPIEnum):
     """schemaID parameter can't be changed."""
     SchemaNotFound = "SchemaNotFound"
     """The specified schema is not found"""
+
     # Objects
     InvalidKeyFormat = "InvalidKeyFormat"
     """Object key has invalid format."""
@@ -209,6 +210,8 @@ class SemanticErrorCodes(CybsiAPIEnum):
     """Object key intersects with another one."""
     SchemaCheckFail = "SchemaCheckFail"
     """Object validation by schema failed."""
+    CursorOutOfRange = "CursorOutOfRange"
+    """Cursor for collection changes is obsolete."""
 
 
 class ErrorView(dict):
