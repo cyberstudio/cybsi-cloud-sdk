@@ -3,7 +3,7 @@ from typing import Optional
 from ..api import Tag
 from ..error import JsonObject
 from ..internal import BaseAPI, JsonObjectForm, JsonObjectView
-from ..pagination import Page, Cursor
+from ..pagination import Cursor, Page
 from ..view import _TaggedView
 
 
@@ -82,7 +82,9 @@ class CollectionAPI(BaseAPI):
         url = f"{self._path}/{collection_id}"
         self._connector.do_patch(url, tag=tag, json=body)
 
-    def filter(self, *, cursor: Optional[Cursor] = None) -> Page["CollectionCommonView"]:
+    def filter(
+        self, *, cursor: Optional[Cursor] = None
+    ) -> Page["CollectionCommonView"]:
         """Get collections.
 
         Note:

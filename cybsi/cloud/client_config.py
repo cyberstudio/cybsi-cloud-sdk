@@ -1,8 +1,10 @@
+from dataclasses import dataclass
 from typing import Optional, Union
 
 import httpx
 
 from .api import Null, Nullable, _unwrap_nullable
+from .auth import APIKeyAuth
 
 TimeoutTypes = Union[
     Optional[float],
@@ -128,3 +130,24 @@ class Timeouts:
 
 DEFAULT_TIMEOUTS = Timeouts(default=5.0)
 DEFAULT_LIMITS = Limits(max_connections=100, max_keepalive_connections=20)
+
+
+@dataclass
+class Config:
+    """:class:`Client` config.
+
+    Args:
+        api_url: Base API URL.
+        auth: Authorization mechanism to use.
+        ssl_verify: Enable SSL certificate verification.
+        timeouts: Timeout configuration. Default configuration is 5 sec
+            on all operations.
+        limits:  Configuration for limits to various client behaviors.
+            Default configuration is max_connections=100, max_keepalive_connections=20.
+    """
+
+    api_url: str
+    auth: APIKeyAuth
+    ssl_verify: bool = True
+    timeouts: Timeouts = DEFAULT_TIMEOUTS
+    limits: Limits = DEFAULT_LIMITS

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from cybsi.cloud import APIKeyAuth, Client, Config
+from cybsi.cloud.iocean import CollectionView
 from cybsi.cloud.pagination import Page
 
 if __name__ == "__main__":
@@ -7,10 +8,10 @@ if __name__ == "__main__":
     auth = APIKeyAuth(api_url=api_url, api_key="api_key")
     config = Config(api_url, auth)
 
-    page: Page[object]  # FIXME: provide type
+    page: Page[CollectionView]
 
     with Client(config) as client:
-        page, _ = client.iocean.collections.get()  # FIXME: implement get()
+        page, _ = client.iocean.collections.filter()
         while page:
             # Page is iterable
             for el in page:

@@ -9,7 +9,7 @@ from .api import Null, Nullable, NullType, Tag
 # APIKeyAuth is exposed only to improve initial SDK experience for newcomers
 # (less typing of imports)
 from .auth import APIKeyAuth
-from .client import Client, Config
-from .client_config import Timeouts, Limits
+from .client import AsyncClient, Client
+from .client_config import Config, Timeouts, Limits
 
 from .enum import CybsiAPIEnum

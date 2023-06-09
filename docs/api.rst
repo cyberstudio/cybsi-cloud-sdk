@@ -15,6 +15,9 @@ Client interface
 .. autoclass:: cybsi.cloud.Client
     :members:
 
+.. autoclass:: cybsi.cloud.AsyncClient
+    :members:
+
 Client configuration
 ~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: cybsi.cloud.Config

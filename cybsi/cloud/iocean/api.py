@@ -1,6 +1,6 @@
 from ..internal import BaseAPI
-from .objects import ObjectsAPI
 from .collection import CollectionAPI
+from .objects import ObjectsAPI
 from .schemas import SchemasAPI
 
 

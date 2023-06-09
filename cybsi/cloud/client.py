@@ -1,33 +1,8 @@
-from dataclasses import dataclass
-from typing import Callable, Union
-
-from .auth import APIKeyAuth, AuthAPI
-from .client_config import DEFAULT_LIMITS, DEFAULT_TIMEOUTS, Limits, Timeouts
+from .auth import AuthAPI
+from .client_config import Config
 from .error import CybsiError
-from .internal import HTTPConnector
+from .internal import AsyncHTTPConnector, HTTPConnector
 from .iocean import IOCeanAPI
-
-
-@dataclass
-class Config:
-    """:class:`Client` config.
-
-    Args:
-        api_url: Base API URL.
-        auth: Optional callable :class:`Client` can use to authenticate requests.
-            In most cases it's enough to pass `api_key` instead of this.
-        ssl_verify: Enable SSL certificate verification.
-        timeouts: Timeout configuration. Default configuration is 5 sec
-            on all operations.
-        limits:  Configuration for limits to various client behaviors.
-            Default configuration is max_connections=100, max_keepalive_connections=20.
-    """
-
-    api_url: str
-    auth: Union[APIKeyAuth, Callable]
-    ssl_verify: bool = True  # TODO: remove?
-    timeouts: Timeouts = DEFAULT_TIMEOUTS
-    limits: Limits = DEFAULT_LIMITS
 
 
 class Client:
@@ -48,7 +23,7 @@ class Client:
         Do this:
             >>> from cybsi.cloud import Client
             >>> client = Client(config)
-            >>> client.iocean.collections
+            >>> res = client.iocean.collections.filter()
         Not this:
             >>> from cybsi.cloud.iocean import IOCeanAPI
             >>> IOceanAPI(connector).collections
@@ -59,11 +34,12 @@ class Client:
         >>> from cybsi.cloud import APIKeyAuth, Config, Client
         >>> api_url = "https://cybsi.cloud/"
         >>> api_key = "8Nqjk6V4Q_et_Rf5EPu4SeWy4nKbVPKPzKJESYdRd7E"
-        >>> auth = APIKeyAuth(api_url, api_key)
-        >>> config = Config(api_url, auth)
+        >>> auth_key = APIKeyAuth(api_url=api_url, api_key=api_key)
+        >>> config = Config(api_url, auth_key)
         >>> client = Client(config)
         >>>
-        >>> client.iocean.collections
+        >>> collections = client.iocean.collections.filter()
+        >>> print(collections.data())
         >>> client.close()  # "with" syntax is also supported for Client
     """
 
@@ -104,3 +80,39 @@ class Client:
     def iocean(self) -> IOCeanAPI:
         """IOCean API handle."""
         return IOCeanAPI(self._connector)
+
+
+class AsyncClient:
+    """The asynchronous analog of :class:`Client`.
+
+    As you can see, the asynchronous client has fewer features than synchronous one.
+    This is because we don't simply copy-paste features,
+    but provide them only when they're actually useful in asynchronous applications.
+
+    Args:
+        config: Client config.
+    """
+
+    def __init__(self, config: Config):
+        if config.auth is None:
+            raise CybsiError("No authorization mechanism configured for client")
+
+        self._connector = AsyncHTTPConnector(
+            base_url=config.api_url,
+            auth=config.auth,
+            ssl_verify=config.ssl_verify,
+            timeouts=config.timeouts,
+            limits=config.limits,
+        )
+
+    async def __aenter__(self) -> "AsyncClient":
+        await self._connector.__aenter__()
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type=None,
+        exc_value=None,
+        traceback=None,
+    ) -> None:
+        await self._connector.__aexit__(exc_type, exc_value, traceback)

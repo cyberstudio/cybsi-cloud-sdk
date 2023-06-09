@@ -5,7 +5,6 @@ import httpx
 from cybsi.__version__ import __version__
 
 from ..api import Tag
-from ..client_config import DEFAULT_LIMITS, DEFAULT_TIMEOUTS, Limits, Timeouts
 from ..error import CybsiError, _raise_cybsi_error
 
 _BASIC_HEADERS = {
@@ -22,9 +21,9 @@ class HTTPConnector:
         self,
         base_url: str,
         auth: Any,
-        ssl_verify=True,
-        timeouts: Timeouts = DEFAULT_TIMEOUTS,
-        limits: Limits = DEFAULT_LIMITS,
+        ssl_verify: bool,
+        timeouts,
+        limits,
     ):
         self._client = httpx.Client(
             auth=auth,
@@ -118,9 +117,9 @@ class AsyncHTTPConnector:
         self,
         base_url: str,
         auth: Any,
-        ssl_verify=True,
-        timeouts: Timeouts = DEFAULT_TIMEOUTS,
-        limits: Limits = DEFAULT_LIMITS,
+        ssl_verify: bool,
+        timeouts,
+        limits,
     ):
         self._client = httpx.AsyncClient(
             auth=auth,
@@ -164,7 +163,12 @@ class AsyncHTTPConnector:
         headers[_IF_MATCH_HEADER] = tag
         return await self._do("PATCH", path, json=json, **kwargs)
 
-    async def do_put(self, path: str, json=None, **kwargs) -> httpx.Response:
+    async def do_put(
+        self, path: str, tag: Optional[Tag] = None, json=None, **kwargs
+    ) -> httpx.Response:
+        if tag is not None:
+            headers = kwargs.setdefault("headers", {})
+            headers[_IF_MATCH_HEADER] = tag
         return await self._do("PUT", path, json=json, **kwargs)
 
     async def do_delete(
