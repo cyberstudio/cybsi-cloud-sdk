@@ -1,7 +1,7 @@
 """Use this section of API to access IOCean objects, collections and schemas.
 """
 
-from .api import IOCeanAPI
+from .api import IOCeanAPI, IOCeanAsyncAPI
 from .collection import (
     CollectionAPI,
     CollectionForm,
@@ -11,6 +11,7 @@ from .collection import (
 )
 from .objects import (
     ObjectsAPI,
+    ObjectsAsyncAPI,
     ObjectKeyType,
     ObjectType,
     ObjectView,

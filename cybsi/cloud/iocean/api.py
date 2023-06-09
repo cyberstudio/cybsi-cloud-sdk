@@ -1,6 +1,6 @@
-from ..internal import BaseAPI
+from ..internal import BaseAPI, BaseAsyncAPI
 from .collection import CollectionAPI
-from .objects import ObjectsAPI
+from .objects import ObjectsAPI, ObjectsAsyncAPI
 from .schemas import SchemasAPI
 
 
@@ -21,3 +21,12 @@ class IOCeanAPI(BaseAPI):
     def objects(self) -> ObjectsAPI:
         """Objects API handle."""
         return ObjectsAPI(self._connector)
+
+
+class IOCeanAsyncAPI(BaseAsyncAPI):
+    """IOCean asynchronous API."""
+
+    @property
+    def objects(self) -> ObjectsAsyncAPI:
+        """Objects asynchronous API handle."""
+        return ObjectsAsyncAPI(self._connector)

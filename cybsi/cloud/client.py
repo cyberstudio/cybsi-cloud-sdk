@@ -2,7 +2,7 @@ from .auth import AuthAPI
 from .client_config import Config
 from .error import CybsiError
 from .internal import AsyncHTTPConnector, HTTPConnector
-from .iocean import IOCeanAPI
+from .iocean import IOCeanAPI, IOCeanAsyncAPI
 
 
 class Client:
@@ -116,3 +116,12 @@ class AsyncClient:
         traceback=None,
     ) -> None:
         await self._connector.__aexit__(exc_type, exc_value, traceback)
+
+    async def aclose(self) -> None:
+        """Close client and release connections."""
+        await self._connector.aclose()
+
+    @property
+    def iocean(self) -> IOCeanAsyncAPI:
+        """IOCean asynchronous API handle."""
+        return IOCeanAsyncAPI(self._connector)

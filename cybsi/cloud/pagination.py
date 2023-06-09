@@ -5,7 +5,7 @@ See Also:
     See :ref:`pagination-example`
     for complete examples of pagination usage.
 """
-from typing import Callable, Generic, Iterator, List, Optional, TypeVar, cast
+from typing import Callable, Coroutine, Generic, Iterator, List, Optional, TypeVar, cast
 from urllib.parse import parse_qs, urlparse
 
 import httpx
@@ -97,6 +97,35 @@ class Page(_BasePage[T]):
             return None
 
         return Page(self._api_call, self._api_call(self.next_link), self._view)
+
+
+class AsyncPage(_BasePage[T]):
+    """Page returned by Cybsi API.
+       Should not be constructed manually, use filter-like methods provided by SDK.
+
+    Args:
+        api_call: Callable object for getting next page
+        resp: Response which represents a start page
+        view: View class for page elements
+    """
+
+    def __init__(
+        self,
+        api_call: Callable[..., Coroutine],
+        resp: httpx.Response,
+        view: Callable[..., T],
+    ):
+        super().__init__(resp, view)
+        self._api_call = api_call
+
+    async def next_page(self) -> "Optional[AsyncPage[T]]":
+        """Get next page.
+        If there is no link to the next page it return None.
+        """
+        if self.next_link is None:
+            return None
+        resp = await self._api_call(self.next_link)
+        return AsyncPage(self._api_call, resp, self._view)
 
 
 def chain_pages(start_page: Page[T]) -> Iterator[T]:
