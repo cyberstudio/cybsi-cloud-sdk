@@ -1,10 +1,10 @@
-from os import environ
+import os
 
 from cybsi.cloud import APIKeyAuth, Client, Config, Limits, Timeouts
 
 if __name__ == "__main__":
-    api_key = environ["CCL_API_KEY"]
-    api_url = environ["CCL_API_URL"]
+    api_url = os.environ.get("CLOUD_BASE_URL", "https://cybsi.cloud")
+    api_key = os.environ.get("CLOUD_API_KEY", "api_key")
 
     auth = APIKeyAuth(api_url=api_url, api_key=api_key)
 
@@ -14,4 +14,4 @@ if __name__ == "__main__":
 
     config = Config(api_url, auth, ssl_verify=False, timeouts=timeouts, limits=limits)
     client = Client(config)
-    client.iocean
+    # then use client as usual

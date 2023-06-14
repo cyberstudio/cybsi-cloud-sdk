@@ -52,4 +52,4 @@ For walking by page elements just iterate through the page.
 The **second** way is elements traversing. This approach allows you to iterate through
 collections without working with pages. To work with collections as with iterator use `chain_pages`.
 
-.. literalinclude:: ../../examples/pagination_chained.py
+.. literalinclude:: ../../examples/get_collection_objects_chained.py
