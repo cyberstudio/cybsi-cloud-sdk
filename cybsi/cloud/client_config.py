@@ -4,7 +4,6 @@ from typing import Optional, Union
 import httpx
 
 from .api import Null, Nullable, _unwrap_nullable
-from .auth import APIKeyAuth
 
 TimeoutTypes = Union[
     Optional[float],
@@ -138,7 +137,7 @@ class Config:
 
     Args:
         api_url: Base API URL.
-        auth: Authorization mechanism to use.
+        api_key: Cybsi Cloud API key.
         ssl_verify: Enable SSL certificate verification.
         timeouts: Timeout configuration. Default configuration is 5 sec
             on all operations.
@@ -147,7 +146,7 @@ class Config:
     """
 
     api_url: str
-    auth: APIKeyAuth
+    api_key: str
     ssl_verify: bool = True
     timeouts: Timeouts = DEFAULT_TIMEOUTS
     limits: Limits = DEFAULT_LIMITS

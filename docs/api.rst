@@ -26,9 +26,8 @@ Client configuration
 .. autoclass:: cybsi.cloud.Timeouts
 
 
-Auth & API-Keys
-~~~~~~~~~~~~~~~
-.. autoclass:: cybsi.cloud.auth.APIKeyAuth
+Auth
+~~~~
 
 .. automodule:: cybsi.cloud.auth
     :members:

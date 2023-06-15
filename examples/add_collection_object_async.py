@@ -2,18 +2,17 @@
 import asyncio
 import os
 
-from cybsi.cloud import APIKeyAuth, AsyncClient, Config
+from cybsi.cloud import AsyncClient, Config
 from cybsi.cloud.iocean.objects import ObjectKeyType, ObjectType
 
 
 async def main():
     api_url = os.environ.get("CLOUD_BASE_URL", "https://cybsi.cloud")
     api_key = os.environ.get("CLOUD_API_KEY", "api_key")
-    auth = APIKeyAuth(api_url=api_url, api_key=api_key)
-    config = Config(api_url, auth)
+    config = Config(api_url, api_key)
 
     collection_id = "example-collection"
-    object_files = [
+    object_files = (
         (
             ObjectType.File,
             [(ObjectKeyType.MD5Hash, "cea239ce075fcb2151ce9ee10227f042")],
@@ -34,7 +33,7 @@ async def main():
             [(ObjectKeyType.MD5Hash, "cea239ce075fcb2151ce9ee10227f012")],
             {"size": 333},
         ),
-    ]
+    )
 
     async with AsyncClient(config) as client:
         objects = [

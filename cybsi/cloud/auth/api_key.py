@@ -25,21 +25,12 @@ logger = logging.getLogger(__name__)
 
 
 class APIKeyAuth(httpx.Auth):
-    """Authomatically handles authentication
+    """Automatically handles authentication
     of :class:`~cybsi.cloud.Client` requests using API key.
 
     Args:
         api_url: Cybsi Cloud auth API URL. Usually equal to Client config API URL.
         api_key: Cybsi Cloud API key.
-    Usage:
-        >>> from cybsi.cloud import APIKeyAuth, Config, Client
-        >>> api_url = "https://cybsi.cloud"
-        >>> api_key = "8Nqjk6V4Q_et_Rf5EPu4SeWy4nKbVPKPzKJESYdRd7E"
-        >>> auth = APIKeyAuth(api_url=api_url, api_key=api_key)
-        >>> config = Config(api_url, auth)
-        >>> client = Client(config)
-        >>> # operate with API
-        >>> client.iocean.schemas
     """
 
     requires_response_body = True  # instructs httpx to pass token request response body

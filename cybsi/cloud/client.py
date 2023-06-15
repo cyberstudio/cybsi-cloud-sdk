@@ -1,6 +1,5 @@
-from .auth import AuthAPI
+from .auth import APIKeyAuth, AuthAPI
 from .client_config import Config
-from .error import CybsiError
 from .internal import AsyncHTTPConnector, HTTPConnector
 from .iocean import IOCeanAPI, IOCeanAsyncAPI
 
@@ -31,11 +30,10 @@ class Client:
     Args:
         config: Client config.
     Usage:
-        >>> from cybsi.cloud import APIKeyAuth, Config, Client
+        >>> from cybsi.cloud import Config, Client
         >>> api_url = "https://cybsi.cloud/"
         >>> api_key = "8Nqjk6V4Q_et_Rf5EPu4SeWy4nKbVPKPzKJESYdRd7E"
-        >>> auth_key = APIKeyAuth(api_url=api_url, api_key=api_key)
-        >>> config = Config(api_url, auth_key)
+        >>> config = Config(api_url, api_key)
         >>> client = Client(config)
         >>>
         >>> collections = client.iocean.collections.filter()
@@ -44,12 +42,11 @@ class Client:
     """
 
     def __init__(self, config: Config):
-        if config.auth is None:
-            raise CybsiError("No authorization mechanism configured for client")
+        auth = APIKeyAuth(api_url=config.api_url, api_key=config.api_key)
 
         self._connector = HTTPConnector(
             base_url=config.api_url,
-            auth=config.auth,
+            auth=auth,
             ssl_verify=config.ssl_verify,
             timeouts=config.timeouts,
             limits=config.limits,
@@ -94,12 +91,11 @@ class AsyncClient:
     """
 
     def __init__(self, config: Config):
-        if config.auth is None:
-            raise CybsiError("No authorization mechanism configured for client")
+        auth = APIKeyAuth(api_url=config.api_url, api_key=config.api_key)
 
         self._connector = AsyncHTTPConnector(
             base_url=config.api_url,
-            auth=config.auth,
+            auth=auth,
             ssl_verify=config.ssl_verify,
             timeouts=config.timeouts,
             limits=config.limits,

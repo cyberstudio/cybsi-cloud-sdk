@@ -2,14 +2,13 @@
 import json
 import os
 
-from cybsi.cloud import APIKeyAuth, Client, Config
+from cybsi.cloud import Client, Config
 from cybsi.cloud.error import ConflictError
 
 if __name__ == "__main__":
     api_url = os.environ.get("CLOUD_BASE_URL", "https://cybsi.cloud")
     api_key = os.environ.get("CLOUD_API_KEY", "api_key")
-    auth = APIKeyAuth(api_url=api_url, api_key=api_key)
-    config = Config(api_url, auth)
+    config = Config(api_url, api_key)
     client = Client(config)
 
     jsonSchema = """
@@ -26,6 +25,20 @@ if __name__ == "__main__":
           "enum": [
             "File"
           ]
+        },
+        "keys": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                }
+            }
         },
         "context": {
           "type": "object",
