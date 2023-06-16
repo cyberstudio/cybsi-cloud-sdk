@@ -49,8 +49,8 @@ class ObjectOperation(CybsiAPIEnum):
     """Object in collection was updated."""
 
 
-class ObjectsAPI(BaseAPI):
-    """Objects API."""
+class ObjectAPI(BaseAPI):
+    """Object API."""
 
     def add(
         self,
@@ -195,7 +195,7 @@ class ObjectsAPI(BaseAPI):
 
 
 class ObjectsAsyncAPI(BaseAsyncAPI):
-    """Objects asynchronous API."""
+    """Object asynchronous API."""
 
     async def add(
         self,

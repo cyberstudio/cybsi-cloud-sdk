@@ -2,15 +2,15 @@ from typing import Optional
 
 from ..api import Tag
 from ..error import JsonObject
-from ..internal import BaseAPI, JsonObjectForm, JsonObjectView
-from ..pagination import Cursor, Page
+from ..internal import BaseAPI, BaseAsyncAPI, JsonObjectForm, JsonObjectView
+from ..pagination import AsyncPage, Cursor, Page
 from ..view import _TaggedView
+
+_PATH = "/iocean/collections"
 
 
 class CollectionAPI(BaseAPI):
     """Collection API"""
-
-    _path = "/iocean/collections"
 
     def register(self, collection: "CollectionForm") -> "CollectionRegistrationView":
         """Register collection.
@@ -32,7 +32,7 @@ class CollectionAPI(BaseAPI):
             Semantic error codes specific for this method:
             * :attr:`~cybsi.cloud.error.SemanticErrorCodes.SchemaNotFound`
         """
-        resp = self._connector.do_post(self._path, json=collection.json())
+        resp = self._connector.do_post(_PATH, json=collection.json())
         return CollectionRegistrationView(resp.json())
 
     def view(self, collection_id: str) -> "CollectionView":
@@ -49,7 +49,7 @@ class CollectionAPI(BaseAPI):
                 Resource not found.
         """
 
-        url = f"{self._path}/{collection_id}"
+        url = f"{_PATH}/{collection_id}"
         resp = self._connector.do_get(url)
         return CollectionView(resp)
 
@@ -79,7 +79,7 @@ class CollectionAPI(BaseAPI):
         if schema_id is not None:
             body["schemaID"] = schema_id
 
-        url = f"{self._path}/{collection_id}"
+        url = f"{_PATH}/{collection_id}"
         self._connector.do_patch(url, tag=tag, json=body)
 
     def filter(
@@ -100,9 +100,105 @@ class CollectionAPI(BaseAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
-        resp = self._connector.do_get(path=self._path, params=params)
-        page = Page(self._connector.do_get, resp, CollectionCommonView)
-        return page
+        resp = self._connector.do_get(path=_PATH, params=params)
+        return Page(self._connector.do_get, resp, CollectionCommonView)
+
+
+class CollectionAsyncAPI(BaseAsyncAPI):
+    """Collection asynchronous API"""
+
+    async def register(
+        self, collection: "CollectionForm"
+    ) -> "CollectionRegistrationView":
+        """Register collection.
+
+        Note:
+            Calls `POST /iocean/collections`.
+        Args:
+            collection: collection form.
+        Return:
+            Collection registration view.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+            :class:`~cybsi.cloud.error.ConflictError`:
+                Collection with the specified id (name) already exists.
+            :class:`~cybsi.cloud.error.SemanticError`:
+                Form contains logic errors.
+        Note:
+            Semantic error codes specific for this method:
+            * :attr:`~cybsi.cloud.error.SemanticErrorCodes.SchemaNotFound`
+        """
+        resp = await self._connector.do_post(_PATH, json=collection.json())
+        return CollectionRegistrationView(resp.json())
+
+    async def view(self, collection_id: str) -> "CollectionView":
+        """Get collection.
+
+        Note:
+            Calls `GET /iocean/collections/{collectionName}`.
+        Args:
+            collection_id: collection's id.
+        Return:
+            Collection view.
+        Raises:
+            :class:`~cybsi.cloud.error.NotFoundError`:
+                Resource not found.
+        """
+
+        url = f"{_PATH}/{collection_id}"
+        resp = await self._connector.do_get(url)
+        return CollectionView(resp)
+
+    async def update(self, collection_id: str, tag: Tag, *, schema_id: Optional[str]):
+        """Update collection
+
+        Note:
+            Calls `PATCH /iocean/collections/{collectionName}`.
+        Args:
+            collection_id: collection's id.
+            tag: :attr:`CollectionView.tag` value. Use :meth:`view` to retrieve it.
+            schema_id: schema identified.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see form value requirements).
+            :class:`~cybsi.cloud.error.ResourceModifiedError`:
+                Object schema changed since last request. Update tag and retry.
+            :class:`~cybsi.cloud.error.NotFoundError`:
+                Resource not found.
+            :class:`~cybsi.cloud.error.SemanticError`:
+                Form contains logic errors.
+        Note:
+            Semantic error codes specific for this method:
+            * :attr:`~cybsi.cloud.error.SemanticErrorCodes.SchemaNotFound`
+        """
+        body = {}
+        if schema_id is not None:
+            body["schemaID"] = schema_id
+
+        url = f"{_PATH}/{collection_id}"
+        await self._connector.do_patch(url, tag=tag, json=body)
+
+    async def filter(
+        self, *, cursor: Optional[Cursor] = None
+    ) -> AsyncPage["CollectionCommonView"]:
+        """Get collections.
+
+        Note:
+            Calls `GET /iocean/collections`.
+        Args:
+            cursor: Page cursor.
+        Return:
+            Page with collection views and next page cursor.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+        """
+        params: JsonObject = {}
+        if cursor is not None:
+            params["cursor"] = str(cursor)
+        resp = await self._connector.do_get(path=_PATH, params=params)
+        return AsyncPage(self._connector.do_get, resp, CollectionCommonView)
 
 
 class CollectionRegistrationView(JsonObjectView):

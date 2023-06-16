@@ -4,13 +4,14 @@
 from .api import IOCeanAPI, IOCeanAsyncAPI
 from .collection import (
     CollectionAPI,
+    CollectionAsyncAPI,
     CollectionForm,
     CollectionCommonView,
     CollectionRegistrationView,
     CollectionView,
 )
 from .objects import (
-    ObjectsAPI,
+    ObjectAPI,
     ObjectsAsyncAPI,
     ObjectKeyType,
     ObjectType,
@@ -20,7 +21,8 @@ from .objects import (
     ObjectOperation,
 )
 from .schemas import (
-    SchemasAPI,
+    SchemaAPI,
+    SchemaAsyncAPI,
     SchemaView,
     SchemaCommonView,
     SchemaRegistrationView,

@@ -9,7 +9,7 @@ from ..error import CybsiError, _raise_cybsi_error
 
 _BASIC_HEADERS = {
     "User-Agent": f"cybsi-cloud-client/v{__version__}",
-    "X-Api-Version": "1"
+    "X-Api-Version": "1",
 }
 
 _IF_MATCH_HEADER = "If-Match"
