@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.0.7 (2023-06-19)
+------------------
+
+- Add schemas async API
+- Add collections async API
+
 0.0.6 (2023-06-16)
 ------------------
 
@@ -27,7 +33,6 @@ Release History
 ------------------
 
 - Add Auth API
-
 
 0.0.1 (2023-05-26)
 ------------------
