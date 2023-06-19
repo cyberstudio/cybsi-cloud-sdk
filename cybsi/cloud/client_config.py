@@ -127,7 +127,7 @@ class Timeouts:
         )
 
 
-DEFAULT_TIMEOUTS = Timeouts(default=5.0)
+DEFAULT_TIMEOUTS = Timeouts(default=60.0)
 DEFAULT_LIMITS = Limits(max_connections=100, max_keepalive_connections=20)
 
 
@@ -139,7 +139,7 @@ class Config:
         api_url: Base API URL.
         api_key: Cybsi Cloud API key.
         ssl_verify: Enable SSL certificate verification.
-        timeouts: Timeout configuration. Default configuration is 5 sec
+        timeouts: Timeout configuration. Default configuration is 60 sec
             on all operations.
         limits:  Configuration for limits to various client behaviors.
             Default configuration is max_connections=100, max_keepalive_connections=20.
