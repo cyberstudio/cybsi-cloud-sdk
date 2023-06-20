@@ -78,7 +78,11 @@ class APIKeyAuth(httpx.Auth):
 
     def _build_token_request(self, req) -> httpx.Request:
         token_url = urljoin(self._api_url, self._get_token_path)
-        headers = {"User-Agent": req.headers["User-Agent"], "X-Api-Key": self._api_key}
+        headers = {
+            "X-Api-Version": req.headers["X-Api-Version"],
+            "User-Agent": req.headers["User-Agent"],
+            "X-Api-Key": self._api_key,
+        }
         return httpx.Request(
             "GET",
             url=token_url,
