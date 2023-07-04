@@ -1,6 +1,11 @@
 Release History
 ===============
 
+0.0.10 (2023-07-04)
+-------------------
+
+- Add API method to get collection schema
+
 0.0.9 (2023-06-20)
 ------------------
 

@@ -5,6 +5,7 @@ from ..error import JsonObject
 from ..internal import BaseAPI, BaseAsyncAPI, JsonObjectForm, JsonObjectView
 from ..pagination import AsyncPage, Cursor, Page
 from ..view import _TaggedView
+from .schemas import SchemaView
 
 _PATH = "/iocean/collections"
 
@@ -52,6 +53,24 @@ class CollectionAPI(BaseAPI):
         url = f"{_PATH}/{collection_id}"
         resp = self._connector.do_get(url)
         return CollectionView(resp)
+
+    def view_schema(self, collection_id: str) -> SchemaView:
+        """Get collection schema.
+
+        Note:
+            Calls `GET /iocean/collections/{collectionName}/schema`.
+        Args:
+            collection_id: collection's id.
+        Return:
+            Schema view.
+        Raises:
+            :class:`~cybsi.cloud.error.NotFoundError`:
+                Resource not found.
+        """
+
+        url = f"{_PATH}/{collection_id}/schema"
+        resp = self._connector.do_get(url)
+        return SchemaView(resp)
 
     def update(self, collection_id: str, tag: Tag, *, schema_id: Optional[str]):
         """Update collection
@@ -149,6 +168,24 @@ class CollectionAsyncAPI(BaseAsyncAPI):
         url = f"{_PATH}/{collection_id}"
         resp = await self._connector.do_get(url)
         return CollectionView(resp)
+
+    async def view_schema(self, collection_id: str) -> SchemaView:
+        """Get collection schema.
+
+        Note:
+            Calls `GET /iocean/collections/{collectionName}/schema`.
+        Args:
+            collection_id: collection's id.
+        Return:
+            Schema view.
+        Raises:
+            :class:`~cybsi.cloud.error.NotFoundError`:
+                Resource not found.
+        """
+
+        url = f"{_PATH}/{collection_id}/schema"
+        resp = await self._connector.do_get(url)
+        return SchemaView(resp)
 
     async def update(self, collection_id: str, tag: Tag, *, schema_id: Optional[str]):
         """Update collection

@@ -43,6 +43,21 @@ Required JSON Schema:
             "File"
           ]
         },
+        "keys": {
+            "type": "array",
+            "description": "Ключи объекта",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "context": {
           "type": "object",
           "description": "Контекст объекта",
