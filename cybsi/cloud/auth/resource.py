@@ -28,6 +28,10 @@ class ResourcesAPI(BaseAPI):
         Raises:
             :class:`~cybsi.cloud.error.InvalidRequestError`:
                 Provided values are invalid (see args value requirements).
+            :class:`~cybsi.cloud.error.SemanticError`: Form contains logic errors.
+        Note:
+            Semantic error codes specific for this method:
+            * :attr:`~cybsi.cloud.error.SemanticErrorCodes.ResourceNotFound`
         """
         params: JsonObject = {}
         if parent_id is not None:

@@ -176,7 +176,7 @@ class ObjectAPI(BaseAPI):
             Do not save returned page cursor if it is :data:`None`.
             :data:`None` means that all changes **for this moment** are received.
             More changes can arrive later. Pass your previous non-none ``cursor``
-            value in loop, until non-none cursor is returned.
+            value in loop, until :data:`None` cursor is returned.
 
             Please wait some time if method returns a page with :data:`None` cursor.
         Raises:
@@ -321,7 +321,7 @@ class ObjectsAsyncAPI(BaseAsyncAPI):
             Do not save returned page cursor if it is :data:`None`.
             :data:`None` means that all changes **for this moment** are received.
             More changes can arrive later. Pass your previous non-none ``cursor``
-            value in loop, until non-none cursor is returned.
+            value in loop, until :data:`None` cursor is returned.
 
             Please wait some time if method returns a page with :data:`None` cursor.
         Raises:

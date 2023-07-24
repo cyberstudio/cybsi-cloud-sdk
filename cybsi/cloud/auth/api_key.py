@@ -107,6 +107,8 @@ class APIKeysAPI(BaseAPI):
     def filter(
         self,
         *,
+        revoked: Optional[bool] = None,
+        description: Optional[str] = None,
         cursor: Optional[Cursor] = None,
     ) -> Page["APIKeyView"]:
         """Get API keys.
@@ -114,6 +116,8 @@ class APIKeysAPI(BaseAPI):
         Note:
             Calls `GET /auth/keys`.
         Args:
+            revoked: Revocation flag.
+            description: Key description.
             cursor: Page cursor.
         Return:
             Page with API-Key common views and next page cursor.
@@ -124,6 +128,10 @@ class APIKeysAPI(BaseAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if revoked is not None:
+            params["revoked"] = bool(revoked)
+        if description is not None:
+            params["description"] = str(description)
         resp = self._connector.do_get(path=self._path, params=params)
         page = Page(self._connector.do_get, resp, APIKeyView)
         return page

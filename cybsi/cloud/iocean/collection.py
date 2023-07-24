@@ -30,6 +30,8 @@ class CollectionAPI(BaseAPI):
             :class:`~cybsi.cloud.error.SemanticError`:
                 Form contains logic errors.
         Note:
+            Conflict error codes specific for this method:
+            * :attr:`~cybsi.cloud.error.ConflictErrorCodes.DuplicateCollection`
             Semantic error codes specific for this method:
             * :attr:`~cybsi.cloud.error.SemanticErrorCodes.SchemaNotFound`
         """
@@ -145,6 +147,8 @@ class CollectionAsyncAPI(BaseAsyncAPI):
             :class:`~cybsi.cloud.error.SemanticError`:
                 Form contains logic errors.
         Note:
+            Conflict error codes specific for this method:
+            * :attr:`~cybsi.cloud.error.ConflictErrorCodes.DuplicateCollection`
             Semantic error codes specific for this method:
             * :attr:`~cybsi.cloud.error.SemanticErrorCodes.SchemaNotFound`
         """

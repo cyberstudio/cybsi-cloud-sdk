@@ -24,11 +24,10 @@ class SchemaAPI(BaseAPI):
         Raises:
             :class:`~cybsi.cloud.error.InvalidRequestError`:
                 Provided values are invalid (see form value requirements).
-            :class:`~cybsi.cloud.error.SemanticError`: Form contains logic errors.
             :class:`~cybsi.cloud.error.ConflictError`: Form contains conflict errors.
         Note:
-            Semantic error codes specific for this method:
-              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidSchema`
+            Invalid request error codes specific for this method:
+              * :attr:`~cybsi.cloud.error.InvalidRequestError.InvalidSchema`
             Conflict error codes specific for this method:
               * :attr:`~cybsi.cloud.error.ConflictErrorCodes.DuplicateSchema`
         """
@@ -59,8 +58,9 @@ class SchemaAPI(BaseAPI):
                 Object schema changed since last request. Update tag and retry.
             :class:`~cybsi.cloud.error.NotFoundError`: Object schema not found.
         Note:
+            Invalid request error codes specific for this method:
+              * :attr:`~cybsi.cloud.error.InvalidRequestError.InvalidSchema`
             Semantic error codes specific for this method:
-              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidSchema`
               * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidSchemaID`
         """
 
@@ -125,11 +125,10 @@ class SchemaAsyncAPI(BaseAsyncAPI):
         Raises:
             :class:`~cybsi.cloud.error.InvalidRequestError`:
                 Provided values are invalid (see form value requirements).
-            :class:`~cybsi.cloud.error.SemanticError`: Form contains logic errors.
             :class:`~cybsi.cloud.error.ConflictError`: Form contains conflict errors.
         Note:
-            Semantic error codes specific for this method:
-              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidSchema`
+            Invalid request error codes specific for this method:
+              * :attr:`~cybsi.cloud.error.InvalidRequestError.InvalidSchema`
             Conflict error codes specific for this method:
               * :attr:`~cybsi.cloud.error.ConflictErrorCodes.DuplicateSchema`
         """
@@ -160,8 +159,9 @@ class SchemaAsyncAPI(BaseAsyncAPI):
                 Object schema changed since last request. Update tag and retry.
             :class:`~cybsi.cloud.error.NotFoundError`: Object schema not found.
         Note:
+            Invalid request error codes specific for this method:
+              * :attr:`~cybsi.cloud.error.InvalidRequestError.InvalidSchema`
             Semantic error codes specific for this method:
-              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidSchema`
               * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidSchemaID`
         """
 
