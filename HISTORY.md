@@ -1,6 +1,15 @@
 Release History
 ===============
 
+0.0.11 (2023-07-24)
+-------------------
+
+- Actualize Schemas api
+- Actualize APIKeys api
+- Actualize Resources api
+- Actualize Collection api
+- Actualize Object api
+
 0.0.10 (2023-07-04)
 -------------------
 
