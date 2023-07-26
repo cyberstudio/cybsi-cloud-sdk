@@ -87,8 +87,6 @@ class InvalidRequestError(APIError):
     InvalidData = "InvalidData"
     InvalidPathArgument = "InvalidPathArgument"
     InvalidQueryArgument = "InvalidQueryArgument"
-    InvalidSchema = "InvalidSchema"
-    """Schema is not valid by metaschema."""
 
     def __init__(self, content: JsonObject) -> None:
         super().__init__(400, content, header="invalid request")
