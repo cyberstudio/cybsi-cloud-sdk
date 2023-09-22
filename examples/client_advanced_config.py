@@ -1,6 +1,6 @@
 from os import environ
 
-from cybsi.cloud import APIKeyAuth, Config, Client, Limits, Timeouts
+from cybsi.cloud import APIKeyAuth, Client, Config, Limits, Timeouts
 
 if __name__ == "__main__":
     api_key = environ["CCL_API_KEY"]

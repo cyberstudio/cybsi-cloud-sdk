@@ -1,0 +1,6 @@
+.idea
+.mypy_cache
+__pycache__
+.venv
+docs/_build
+dist

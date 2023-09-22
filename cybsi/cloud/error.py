@@ -143,9 +143,7 @@ class RequestEntityTooLargeError(APIError):
     """Request content is too large."""
 
     def __init__(self, content: JsonObject) -> None:
-        super().__init__(
-            413, content, header="request content is too large", suffix=""
-        )
+        super().__init__(413, content, header="request content is too large", suffix="")
 
 
 class SemanticError(APIError):

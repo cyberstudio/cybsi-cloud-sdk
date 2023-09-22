@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "cybsi-cloud-sdk"
+version = "0.0.1"
+description = "Cybsi Cloud development kit"
+authors = ["Cybsi developers"]
+license = "MIT"
+packages = [
+    { include = "cybsi" },
+]
+include = ["cybsi/py.typed"]
+
+
+[tool.poetry.dependencies]
+python = "^3.7"
+enum-tools = "0.9.0.post1"
+typing-extensions = {version = "^4.1.1", markers = "python_version < '3.8'" }
+httpx = "^0.23.1"
+sphinx-jinja2-compat = "0.1.1"
+aiofiles = "22.1.0"
+
+[tool.poetry.dev-dependencies]
+isort = "5.10.1"
+black = "22.3.0"
+flake8 = "4.0.1"
+mypy = "0.991"
+Sphinx = "4.2.0"
+sphinx_toolbox = "2.16.0"
+"sphinxjp.themes.basicstrap" = "0.5.0"
+sphinx-autodoc-typehints = "1.11.1"
+pytest = "^7.1.1"
+tbump = "6.8.0"
+sphinx-jinja2-compat = "0.1.1"
+aiofiles = "22.1.0"
+types-aiofiles = "22.1.0.4"
+aiohttp = "3.8.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+extend_skip = ["__init__.py"]
+
+[tool.tbump]
+
+[tool.tbump.version]
+current = "0.0.1"
+
+regex = '''
+  ^
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  (?P<extra>[ab]\d+)?
+  $
+  '''
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[[tool.tbump.file]]
+src = "pyproject.toml"
+
+[[tool.tbump.file]]
+src = "cybsi/__version__.py"
+
+[[tool.tbump.before_commit]]
+name = "Update changelog and check if it contains new version"
+cmd = "./update-changelog.sh {new_version}"

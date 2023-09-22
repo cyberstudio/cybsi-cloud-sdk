@@ -55,7 +55,7 @@ To do that, run this once:
 
 .. code-block:: bash
 
-  $ poetry config repositories.artifactory https://repo.ptsecurity.ru/artifactory/api/pypi/cybsi-cloud-pypi
+  $ poetry config repositories (TODO add repository)
 
 And then use the following commands:
 
@@ -63,12 +63,8 @@ And then use the following commands:
 
   $ git checkout master && git pull
   $ git tag v1.2.3a4  # See the actual version in pyproject.toml
-  $ poetry publish --build -r artifactory
+  $ poetry publish --build -r (TODO add repo name)
   $ git push origin v1.2.3a4
-
-Go to `Artifactory`_ and refresh the index manually if you want it to be available as soon as possible.
-
-.. _Artifactory: https://repo.ptsecurity.ru/artifactory/webapp/#/artifacts/browse/tree/General/cybsi-cloud-pypi
 
 .. _bug-reports:
 

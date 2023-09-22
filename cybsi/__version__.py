@@ -1,6 +1,6 @@
 __version__ = "0.0.1"
 __title__ = "cybsi-cloud-sdk"
 __description__ = "Cybsi Cloud development kit"
-__license__ = "MIT"
+__license__ = "Apache License 2.0"
 __author__ = "cybsi developers"
-__author_email__ = "Cybsi.Dev@ptsecurity.com"
+__author_email__ = ""
