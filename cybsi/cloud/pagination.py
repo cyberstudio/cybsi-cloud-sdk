@@ -45,7 +45,6 @@ class _BasePage(Generic[T]):
     @property
     def next_link(self) -> str:
         """Next page link."""
-        # TODO: check if it's correct
         return cast(str, self._resp.links.get("next", {}).get("url"))
 
     @property
