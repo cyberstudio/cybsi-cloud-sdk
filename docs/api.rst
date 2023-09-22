@@ -38,6 +38,8 @@ IOCean
 ~~~~~~
 .. automodule:: cybsi.cloud.iocean
     :members:
+    :imported-members:
+    :inherited-members:
 
 Common views and data types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

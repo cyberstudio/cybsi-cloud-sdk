@@ -36,6 +36,7 @@ this part of the documentation is for you.
    :maxdepth: 2
 
    api
+   user/data_model
 
 
 The Community Guide
