@@ -5,7 +5,7 @@ Installation of Cybsi Cloud SDK
 
 Latest version and its dependencies
 -----------------------------------------------
-We host SDK on private PyPI registry.
+We host SDK on PyPI registry.
 
 To install it from registry, simply run the following command in your terminal of choice:
 

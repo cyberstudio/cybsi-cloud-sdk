@@ -3,7 +3,7 @@ name = "cybsi-cloud-sdk"
 version = "1.0.0"
 description = "Cybsi Cloud development kit"
 authors = ["Cybsi developers"]
-license = "MIT"
+license = "Apache License 2.0"
 packages = [
     { include = "cybsi" },
 ]

@@ -44,7 +44,7 @@ copyright = u"PT"
 author = u"Cybsi Devs"
 version = cybsi.__version__
 release = cybsi.__version__
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
