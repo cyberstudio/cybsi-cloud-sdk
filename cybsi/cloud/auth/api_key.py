@@ -48,33 +48,36 @@ class APIKeyAuth(httpx.Auth):
     def sync_auth_flow(
         self, request: httpx.Request
     ) -> Generator[httpx.Request, httpx.Response, None]:
+        token = self._token
+        if token:
+            request.headers["Authorization"] = self._token
+            response = yield request
+            if response.status_code != 401:
+                return
 
         with self._sync_lock:
-            if self._token:
-                request.headers["Authorization"] = self._token
-                response = yield request
-
-            if not self._token or response.status_code == 401:
+            if self._token == token:
                 token_response = yield self._build_token_request(request)
                 self._update_token(token_response, token_response.read())
-
-                request.headers["Authorization"] = self._token
-                yield request
+            request.headers["Authorization"] = self._token
+            yield request
 
     async def async_auth_flow(
         self, request: httpx.Request
     ) -> AsyncGenerator[httpx.Request, httpx.Response]:
-        async with self._async_lock:
-            if self._token:
-                request.headers["Authorization"] = self._token
-                response = yield request
+        token = self._token
+        if token:
+            request.headers["Authorization"] = self._token
+            response = yield request
+            if response.status_code != 401:
+                return
 
-            if not self._token or response.status_code == 401:
+        async with self._async_lock:
+            if self._token == token:
                 token_response = yield self._build_token_request(request)
                 self._update_token(token_response, await token_response.aread())
-
-                request.headers["Authorization"] = self._token
-                yield request
+            request.headers["Authorization"] = self._token
+            yield request
 
     def _build_token_request(self, req) -> httpx.Request:
         token_url = urljoin(self._api_url, self._get_token_path)
