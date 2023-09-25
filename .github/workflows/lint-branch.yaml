@@ -1,0 +1,25 @@
+name: Lint
+on: [push]
+
+jobs:
+  lint:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.7' ]
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: make tools
+      - name: Run lint
+        run: make lint
+      - name: Run test
+        run: make test
+      - name: Run building docs
+        run: make build-docs
