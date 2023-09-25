@@ -71,4 +71,4 @@ And then use the following commands:
 Bug Reports & Feature Requests
 ------------------------------
 
-Please send them to Cybsi developers over email.
+Please send them to Cybsi Cloud developers over github issues.

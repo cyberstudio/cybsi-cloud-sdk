@@ -2,7 +2,7 @@
 name = "cybsi-cloud-sdk"
 version = "1.0.0"
 description = "Cybsi Cloud development kit"
-authors = ["Cybsi developers"]
+authors = ["Cybsi Cloud developers"]
 license = "Apache License 2.0"
 packages = [
     { include = "cybsi" },
