@@ -30,9 +30,10 @@ class CybsiError(Exception):
 
     """
 
-    def __init__(self, message, ex: Optional[Exception] = None):
-        msg = message if ex is None else f"{message}: {ex}"
-        super().__init__(msg)
+    def __init__(self, message: str, ex: Optional[Exception] = None):
+        if ex and str(ex) != "":
+            message = f"{message}: {ex}"
+        super().__init__(message)
         self._ex = ex
 
 
