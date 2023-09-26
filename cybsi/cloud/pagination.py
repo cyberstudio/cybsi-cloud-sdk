@@ -5,7 +5,17 @@ See Also:
     See :ref:`pagination-example`
     for complete examples of pagination usage.
 """
-from typing import Callable, Coroutine, Generic, Iterator, List, Optional, TypeVar, cast
+from typing import (
+    AsyncIterator,
+    Callable,
+    Coroutine,
+    Generic,
+    Iterator,
+    List,
+    Optional,
+    TypeVar,
+    cast,
+)
 from urllib.parse import parse_qs, urlparse
 
 import httpx
@@ -134,3 +144,12 @@ def chain_pages(start_page: Page[T]) -> Iterator[T]:
     while page:
         yield from page
         page = page.next_page()
+
+
+async def chain_pages_async(start_page: AsyncPage[T]) -> AsyncIterator[T]:
+    """Get chain of collection objects asynchronously."""
+    page: Optional[AsyncPage[T]] = start_page
+    while page:
+        for elem in page:
+            yield elem
+        page = await page.next_page()
