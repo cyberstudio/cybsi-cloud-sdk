@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cybsi-cloud-sdk"
-version = "1.0.0"
+version = "1.0.1"
 description = "Cybsi Cloud development kit"
 authors = ["Cybsi Cloud developers"]
 license = "Apache License 2.0"
@@ -40,7 +40,7 @@ extend_skip = ["__init__.py"]
 [tool.tbump]
 
 [tool.tbump.version]
-current = "1.0.0"
+current = "1.0.1"
 
 regex = '''
   ^

@@ -1,6 +1,13 @@
 Release History
 ===============
 
+1.0.1 (2023-09-26)
+------------------
+
+- Boost API client authentication
+- Add license Apache License 2.0
+- Fix documentation
+
 1.0.0 (2023-08-07)
 ------------------
 
