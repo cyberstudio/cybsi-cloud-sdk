@@ -49,9 +49,9 @@ An author of a merge request must to the following:
 #. Bump version using :ref:`rules <release-process>`. Use ``make bump-version $NEW_VERSION``.
 #. Ensure everything builds nicely (``make lint test build-docs``)
 
-Stable versions are published to PyPi manually.
+Stable versions are published to PyPI using GitHub release workflow or manually.
 
-To do that, run this once:
+To do manually, run this once:
 
 .. code-block:: bash
 
