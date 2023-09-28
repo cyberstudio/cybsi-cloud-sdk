@@ -239,4 +239,4 @@ class SchemaView(_TaggedView):
 
         See :ref:`object_schemas` for information about schema structure.
         """
-        return self._data
+        return self.raw()

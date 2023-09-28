@@ -63,6 +63,10 @@ class JsonObjectView:
             return [mapper(val) for val in values]
         return None
 
+    def raw(self) -> JsonObject:
+        """Returns raw object view"""
+        return self._data
+
 
 T = TypeVar("T")
 
