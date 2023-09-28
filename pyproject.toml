@@ -4,6 +4,7 @@ version = "1.0.3"
 description = "Cybsi Cloud development kit"
 authors = ["Cybsi Cloud developers"]
 license = "Apache License 2.0"
+readme = "README.md"
 packages = [
     { include = "cybsi" },
 ]
