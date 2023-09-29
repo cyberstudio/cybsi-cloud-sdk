@@ -29,11 +29,11 @@ Source code
 
 .. code-block:: console
 
-  $ git clone git@github.com:perastov/cybsi-cloud-sdk.git
+  $ git clone git@github.com:cyberstudio/cybsi-cloud-sdk.git
 
 Once you have a copy of the source, you can embed it in your own Python package, or install it into your site-packages easily:
 
 .. code-block:: console
 
-  $ cd cloud-python-sdk
+  $ cd cybsi-cloud-sdk
   $ python -m pip install .
