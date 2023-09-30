@@ -79,7 +79,7 @@ todo_include_todos = True
 
 html_theme = 'basicstrap'
 html_theme_options = {
-    'sidebar_span': 2,
+    'sidebar_span': 1,
 }
 html_static_path = ["_static"]
 

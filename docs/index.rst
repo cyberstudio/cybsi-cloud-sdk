@@ -6,8 +6,19 @@ Cybsi Cloud SDK: **Cyb**\ er\ **s**\ecurity Threat **I**\ntelligence Cloud devel
 Release v\ |version|. (:ref:`Installation <install>`)
 
 **Cybsi Cloud SDK** is a Python library for communication with Cybsi Cloud over HTTP REST API.
-It supports Python 3.7+, and has both synchronous and asynchronous interface.
+It has both synchronous and asynchronous interface.
 
+.. image:: https://img.shields.io/pypi/l/cybsi-cloud-sdk.svg
+    :target: https://pypi.org/project/cybsi-cloud-sdk/
+    :alt: License Badge
+
+.. image:: https://img.shields.io/pypi/wheel/cybsi-cloud-sdk.svg
+    :target: https://pypi.org/project/cybsi-cloud-sdk/
+    :alt: Wheel Support Badge
+
+.. image:: https://img.shields.io/pypi/pyversions/cybsi-cloud-sdk.svg
+    :target: https://pypi.org/project/cybsi-cloud-sdk/
+    :alt: Python Version Support Badge
 
 The User Guide
 --------------
