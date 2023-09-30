@@ -1,10 +1,8 @@
 Cybsi Cloud SDK
 ---------------
-
 Python SDK для лёгкой интеграции с сервисами Cybsi Cloud (https://cybsi.cloud). Cybsi Cloud предоставляет данные о киберугрозах.
 
-Библиотека поддерживает Python 3.7+ и имеет как синхронный, так и асинхронный интерфейс.
+Библиотека имеет как синхронный, так и асинхронный интерфейс.
 
-[Последняя версия документации](https://cybsi-cloud-sdk.readthedocs.io/).
-
-[Руководство по настройке окружения разработчика и выпуску релизов](https://cybsi-cloud-sdk.readthedocs.io/en/latest/dev/contributing.html).
+[![Supported Versions](https://img.shields.io/pypi/pyversions/cybsi-cloud-sdk.svg)](https://pypi.org/project/cybsi-cloud-sdk/)
+[![Documentation Status](https://readthedocs.org/projects/cybsi-cloud-sdk/badge/?version=latest)](https://cybsi-cloud-sdk.readthedocs.io/en/latest/?badge=latest)
