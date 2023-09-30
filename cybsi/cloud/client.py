@@ -31,9 +31,8 @@ class Client:
         config: Client config.
     Usage:
         >>> from cybsi.cloud import Config, Client
-        >>> api_url = "https://cybsi.cloud/"
         >>> api_key = "8Nqjk6V4Q_et_Rf5EPu4SeWy4nKbVPKPzKJESYdRd7E"
-        >>> config = Config(api_url, api_key)
+        >>> config = Config(api_key)
         >>> client = Client(config)
         >>>
         >>> collections = client.iocean.collections.filter()

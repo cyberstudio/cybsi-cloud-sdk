@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-import os
 from datetime import datetime, timedelta
 
 from cybsi.cloud import Client, Config
 from cybsi.cloud.auth import APIKeyForm, ResourceAction, ResourcePermissionForm
 
 if __name__ == "__main__":
-    api_url = os.environ.get("CLOUD_BASE_URL", "https://cybsi.cloud")
-    api_key = os.environ.get("CLOUD_API_KEY", "api_key")
-    config = Config(api_url, api_key)
+    config = Config(api_key="the cryptic string")
 
     with Client(config) as client:
         permissions = [

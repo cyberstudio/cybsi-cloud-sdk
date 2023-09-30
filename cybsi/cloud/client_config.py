@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional, Union
 
 import httpx
@@ -131,13 +130,12 @@ DEFAULT_TIMEOUTS = Timeouts(default=60.0)
 DEFAULT_LIMITS = Limits(max_connections=100, max_keepalive_connections=20)
 
 
-@dataclass
 class Config:
     """:class:`Client` config.
 
     Args:
-        api_url: Base API URL.
         api_key: Cybsi Cloud API key.
+        api_url: Base API URL.
         ssl_verify: Enable SSL certificate verification.
         timeouts: Timeout configuration. Default configuration is 60 sec
             on all operations.
@@ -145,8 +143,17 @@ class Config:
             Default configuration is max_connections=100, max_keepalive_connections=20.
     """
 
-    api_url: str
-    api_key: str
-    ssl_verify: bool = True
-    timeouts: Timeouts = DEFAULT_TIMEOUTS
-    limits: Limits = DEFAULT_LIMITS
+    def __init__(
+        self,
+        *,
+        api_key: str,
+        api_url: str = "https://cybsi.cloud",
+        ssl_verify: bool = True,
+        timeouts: Timeouts = DEFAULT_TIMEOUTS,
+        limits: Limits = DEFAULT_LIMITS,
+    ):
+        self.api_key = api_key
+        self.api_url = api_url
+        self.ssl_verify = ssl_verify
+        self.timeouts = timeouts
+        self.limits = limits
