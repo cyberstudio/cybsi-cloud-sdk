@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 import json
-import os
 
 from cybsi.cloud import Client, Config
 from cybsi.cloud.error import ConflictError
 
 if __name__ == "__main__":
-    api_url = os.environ.get("CLOUD_BASE_URL", "https://cybsi.cloud")
-    api_key = os.environ.get("CLOUD_API_KEY", "api_key")
-    config = Config(api_url, api_key)
+    config = Config(api_key="the cryptic string")
     client = Client(config)
 
     jsonSchema = """

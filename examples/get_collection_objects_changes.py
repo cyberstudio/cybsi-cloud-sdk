@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import time
 from typing import Iterable, Optional
 
@@ -9,9 +8,7 @@ from cybsi.cloud.pagination import Cursor, Page
 
 
 def main():
-    api_url = os.environ.get("CLOUD_BASE_URL", "https://cybsi.cloud")
-    api_key = os.environ.get("CLOUD_API_KEY", "api_key")
-    config = Config(api_url, api_key)
+    config = Config(api_key="the cryptic string")
 
     with Client(config) as client:
         collection_id = "example-collection"
