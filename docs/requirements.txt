@@ -4,7 +4,7 @@ Sphinx==4.2.0
 sphinx_toolbox==2.16.0
 sphinx-autodoc-typehints==1.11.1
 enum_tools==0.11.0
-sphinxjp.themes.basicstrap==0.5.0
+sphinx-book-theme==1.0.1
 httpx==0.23.1
 sphinx-jinja2-compat==0.1.1
 aiofiles==22.1.0
