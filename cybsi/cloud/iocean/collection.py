@@ -104,7 +104,10 @@ class CollectionAPI(BaseAPI):
         self._connector.do_patch(url, tag=tag, json=body)
 
     def filter(
-        self, *, cursor: Optional[Cursor] = None
+        self,
+        *,
+        cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> Page["CollectionCommonView"]:
         """Get collections.
 
@@ -112,6 +115,7 @@ class CollectionAPI(BaseAPI):
             Calls `GET /iocean/collections`.
         Args:
             cursor: Page cursor.
+            limit: Page limit.
         Return:
             Page with collection views and next page cursor.
         Raises:
@@ -121,6 +125,8 @@ class CollectionAPI(BaseAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         resp = self._connector.do_get(path=_PATH, params=params)
         return Page(self._connector.do_get, resp, CollectionCommonView)
 
@@ -221,7 +227,10 @@ class CollectionAsyncAPI(BaseAsyncAPI):
         await self._connector.do_patch(url, tag=tag, json=body)
 
     async def filter(
-        self, *, cursor: Optional[Cursor] = None
+        self,
+        *,
+        cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> AsyncPage["CollectionCommonView"]:
         """Get collections.
 
@@ -229,6 +238,7 @@ class CollectionAsyncAPI(BaseAsyncAPI):
             Calls `GET /iocean/collections`.
         Args:
             cursor: Page cursor.
+            limit: Page limit.
         Return:
             Page with collection views and next page cursor.
         Raises:
@@ -238,6 +248,8 @@ class CollectionAsyncAPI(BaseAsyncAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         resp = await self._connector.do_get(path=_PATH, params=params)
         return AsyncPage(self._connector.do_get, resp, CollectionCommonView)
 

@@ -113,6 +113,7 @@ class APIKeysAPI(BaseAPI):
         revoked: Optional[bool] = None,
         description: Optional[str] = None,
         cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> Page["APIKeyView"]:
         """Get API keys.
 
@@ -122,6 +123,7 @@ class APIKeysAPI(BaseAPI):
             revoked: Revocation flag.
             description: Key description.
             cursor: Page cursor.
+            limit: Page limit.
         Return:
             Page with API-Key common views and next page cursor.
         Raises:
@@ -131,6 +133,8 @@ class APIKeysAPI(BaseAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         if revoked is not None:
             params["revoked"] = bool(revoked)
         if description is not None:

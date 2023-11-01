@@ -15,6 +15,7 @@ class ResourcesAPI(BaseAPI):
         *,
         parent_id: Optional[int] = None,
         cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> Page["ResourceView"]:
         """Get resources.
 
@@ -23,6 +24,7 @@ class ResourcesAPI(BaseAPI):
         Args:
             parent_id: identifier of parent resource. It must be greater than 0.
             cursor: Page cursor.
+            limit: Page limit.
         Return:
             Page with resource common views and next page cursor.
         Raises:
@@ -38,6 +40,8 @@ class ResourcesAPI(BaseAPI):
             params["parentID"] = parent_id
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         resp = self._connector.do_get(path=self._path, params=params)
         page = Page(self._connector.do_get, resp, ResourceView)
         return page
