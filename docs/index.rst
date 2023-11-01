@@ -32,6 +32,7 @@ instructions for getting the most out of Cybsi Cloud SDK.
 
    user/install
    user/quickstart
+   user/pagination
    user/examples
    user/advanced
    user/authentication

@@ -84,6 +84,7 @@ class SchemaAPI(BaseAPI):
         self,
         *,
         cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> Page["SchemaCommonView"]:
         """Get an object schemas filtration list.
 
@@ -91,6 +92,7 @@ class SchemaAPI(BaseAPI):
             Calls `GET /iocean/schemas`.
         Args:
             cursor: Page cursor.
+            limit: Page limit.
         Returns:
              Page with schema common views and next page cursor.
         Raises:
@@ -101,6 +103,8 @@ class SchemaAPI(BaseAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         resp = self._connector.do_get(path=_PATH, params=params)
         return Page(self._connector.do_get, resp, SchemaCommonView)
 
@@ -181,6 +185,7 @@ class SchemaAsyncAPI(BaseAsyncAPI):
         self,
         *,
         cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> AsyncPage["SchemaCommonView"]:
         """Get an object schemas filtration list.
 
@@ -188,6 +193,7 @@ class SchemaAsyncAPI(BaseAsyncAPI):
             Calls `GET /iocean/schemas`.
         Args:
             cursor: Page cursor.
+            limit: Page limit.
         Returns:
              Page with schema common views and next page cursor.
         Raises:
@@ -198,6 +204,8 @@ class SchemaAsyncAPI(BaseAsyncAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         resp = await self._connector.do_get(path=_PATH, params=params)
         return AsyncPage(self._connector.do_get, resp, SchemaCommonView)
 

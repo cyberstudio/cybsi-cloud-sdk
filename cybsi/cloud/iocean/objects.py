@@ -126,7 +126,11 @@ class ObjectAPI(BaseAPI):
         self._connector.do_delete(path=path, params=params)
 
     def filter(
-        self, *, collection_id: str, cursor: Optional[Cursor] = None
+        self,
+        *,
+        collection_id: str,
+        cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> Tuple[Page["ObjectView"], Optional[Cursor]]:
         """Get objects from the collection.
 
@@ -135,6 +139,7 @@ class ObjectAPI(BaseAPI):
         Args:
             collection_id: Collection identifier.
             cursor: Page cursor.
+            limit: Page limit.
         Return:
             Page with object views. The page contains next page cursor.
             Changes cursor. The cursor can be used to call :meth:`changes`.
@@ -148,6 +153,8 @@ class ObjectAPI(BaseAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         path = _PATH.format(collection_id)
         resp = self._connector.do_get(path=path, params=params)
         return Page(self._connector.do_get, resp, ObjectView), _extract_changes_cursor(
@@ -155,7 +162,11 @@ class ObjectAPI(BaseAPI):
         )
 
     def changes(
-        self, *, collection_id: str, cursor: Cursor
+        self,
+        *,
+        collection_id: str,
+        cursor: Cursor,
+        limit: Optional[int] = None,
     ) -> Page["ObjectChangeView"]:
         """Get objects changes from the collection.
 
@@ -168,6 +179,7 @@ class ObjectAPI(BaseAPI):
                 obtained when requesting objects :meth:`filter`.
                 Subsequent calls should use cursor property of the page
                 returned by :meth:`changes`.
+            limit: Page limit.
         Return:
             Page with changes.
         Warning:
@@ -189,6 +201,8 @@ class ObjectAPI(BaseAPI):
               * :attr:`~cybsi.cloud.error.SemanticErrorCodes.CursorOutOfRange`
         """
         params: JsonObject = {"cursor": cursor}
+        if limit is not None:
+            params["limit"] = limit
         path = _PATH.format(collection_id) + "/changes"
         resp = self._connector.do_get(path=path, params=params)
         return Page(self._connector.do_get, resp, ObjectChangeView)
@@ -271,7 +285,11 @@ class ObjectsAsyncAPI(BaseAsyncAPI):
         await self._connector.do_delete(path=path, params=params)
 
     async def filter(
-        self, *, collection_id: str, cursor: Optional[Cursor] = None
+        self,
+        *,
+        collection_id: str,
+        cursor: Optional[Cursor] = None,
+        limit: Optional[int] = None,
     ) -> Tuple[AsyncPage["ObjectView"], Optional[Cursor]]:
         """Get objects from the collection.
 
@@ -280,6 +298,7 @@ class ObjectsAsyncAPI(BaseAsyncAPI):
         Args:
             collection_id: Collection identifier.
             cursor: Page cursor.
+            limit: Page limit.
         Return:
             Page with object views. The page contains next page cursor.
             Changes cursor. The cursor can be used to call :meth:`changes`.
@@ -293,6 +312,8 @@ class ObjectsAsyncAPI(BaseAsyncAPI):
         params: JsonObject = {}
         if cursor is not None:
             params["cursor"] = str(cursor)
+        if limit is not None:
+            params["limit"] = limit
         path = _PATH.format(collection_id)
         resp = await self._connector.do_get(path=path, params=params)
         return AsyncPage(
@@ -300,7 +321,11 @@ class ObjectsAsyncAPI(BaseAsyncAPI):
         ), _extract_changes_cursor(resp)
 
     async def changes(
-        self, *, collection_id: str, cursor: Cursor
+        self,
+        *,
+        collection_id: str,
+        cursor: Cursor,
+        limit: Optional[int] = None,
     ) -> AsyncPage["ObjectChangeView"]:
         """Get objects changes from the collection.
 
@@ -313,6 +338,7 @@ class ObjectsAsyncAPI(BaseAsyncAPI):
                 obtained when requesting objects :meth:`filter`.
                 Subsequent calls should use cursor property of the page
                 returned by :meth:`changes`.
+            limit: Page limit.
         Return:
             Page with changes.
         Warning:
@@ -334,6 +360,8 @@ class ObjectsAsyncAPI(BaseAsyncAPI):
               * :attr:`~cybsi.cloud.error.SemanticErrorCodes.CursorOutOfRange`
         """
         params: JsonObject = {"cursor": cursor}
+        if limit is not None:
+            params["limit"] = limit
         path = _PATH.format(collection_id) + "/changes"
         resp = await self._connector.do_get(path=path, params=params)
         return AsyncPage(self._connector.do_get, resp, ObjectChangeView)
