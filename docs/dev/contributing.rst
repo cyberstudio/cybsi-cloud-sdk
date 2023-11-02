@@ -18,6 +18,8 @@ Formatting is performed using ``make lint``. There are no compromises.
 Documentation Contributions
 ---------------------------
 
+Documentation build tools requires at least ``python 3.9``
+
 The documentation files live in the ``docs/`` directory. Docs are written in
 `reStructuredText`_, and use `Sphinx`_ to generate the full suite of
 documentation.

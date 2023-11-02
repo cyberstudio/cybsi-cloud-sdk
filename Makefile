@@ -62,7 +62,6 @@ docker-clean:
 ################ Helper targets ################
 .PHONY: tools
 tools: #### Install tools needed for development.
-	pip3 install "urllib3<2"
 	pip3 install poetry==${POETRY_VERSION}
 	# add plugin to export requirements for documentation from pyproject.toml
 	poetry self add poetry-plugin-export

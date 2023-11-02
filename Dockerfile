@@ -7,7 +7,6 @@ RUN apt-get update && \
     make
 
 # install urllib v1.x manually to avoid 'strict' attribute error
-RUN pip3 install "urllib3<2"
 ARG POETRY_VERSION
 RUN pip3 install poetry==${POETRY_VERSION}
 
