@@ -1,4 +1,4 @@
-FROM python:3.7.12-slim-buster
+FROM python:3.8.18-slim-bookworm
 
 ARG PIP_INDEX_URL
 
@@ -15,7 +15,7 @@ RUN pip3 install poetry==1.1.12
 WORKDIR /cybsi_cloud_sdk
 
 # dependencies for poetry install
-COPY poetry.lock pyproject.toml ./
+COPY poetry.lock pyproject.toml README.md ./
 COPY ./cybsi/__version__.py ./cybsi/py.typed ./cybsi/
 
 RUN poetry install
