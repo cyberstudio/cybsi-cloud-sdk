@@ -6,6 +6,7 @@ DOCKER_IMAGE := cybsi/cybsi-cloud-sdk
 DOCKER_TAG ?= latest
 VENV_DIR ?= .venv
 SOURCE_DIRS := cybsi examples # TODO: add tests
+POETRY_VERSION := 1.7.0
 
 # If the first argument is "bump-version"...
 ifeq (bump-version,$(firstword $(MAKECMDGOALS)))
@@ -32,7 +33,7 @@ build-docs:
 
 .PHONY: image-build
 image-build:
-	docker build $(DOCKER_BUILD_FLAGS) --tag "$(DOCKER_IMAGE):$(DOCKER_TAG)" "$(ROOT_DIR)"
+	docker build $(DOCKER_BUILD_FLAGS) --build-arg POETRY_VERSION=${POETRY_VERSION} --tag "$(DOCKER_IMAGE):$(DOCKER_TAG)" "$(ROOT_DIR)"
 
 .PHONY: image-clean
 image-clean: ### Remove last version of the images.
@@ -62,8 +63,16 @@ docker-clean:
 .PHONY: tools
 tools: #### Install tools needed for development.
 	pip3 install "urllib3<2"
-	pip3 install poetry==1.1.12
-	poetry install
+	pip3 install poetry==${POETRY_VERSION}
+	# add plugin to export requirements for documentation from pyproject.toml
+	poetry self add poetry-plugin-export
+	poetry install --with docs,docs-dev
+
+.PHONY: update-docs-dependencies
+update-docs-dependencies: #### Update pinned docs dependencies.
+	poetry export -f requirements.txt --without-hashes --only docs -o ${DOCS_DIR}/requirements.in
+	make -C ${DOCS_DIR} update-requirements
+
 
 .PHONY: bump-version
 bump-version:

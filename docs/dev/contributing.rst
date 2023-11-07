@@ -25,6 +25,27 @@ documentation.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Sphinx: http://sphinx-doc.org/index.html
 
+Documentation building requires group ``docs`` of ``pyproject.toml`` to be installed.
+Use ``poetry install --with docs`` to install environment with docs build tools.
+
+Documentation tools update
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When documentation tools update required:
+
+#. install dependencies ``poetry install --with docs-dev``;
+#. update dependencies at ``docs`` group at ``pyproject.toml``;
+#. use ``make update-docs-dependencies`` to update dependencies.
+
+``make update-docs-dependencies`` exports dependencies from ``docs`` group at ``pyproject.toml`` to
+``docs/requirements.in``, then it is compiled to ``docs/requirements.txt``.
+``docs/requirements.txt`` contains complete list of packages with specific versions used
+to reproduce same documentation build environment.
+
+See `ReadTheDocs: Reproducible Builds`_ for details.
+
+.. _`ReadTheDocs: Reproducible Builds`: https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
+
 Developer Environment Setup
 ---------------------------
 Run the following command:
@@ -33,7 +54,7 @@ Run the following command:
 
   $ make tools
 
-This will create a virtualenv with all dependencies installed.
+This will create a virtualenv with all dependencies installed including documentation development tools.
 
 After that you have to `install isort's plugin <https://github.com/pycqa/isort/wiki/isort-Plugins>`_
 for your preferred text editor.
