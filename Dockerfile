@@ -1,6 +1,4 @@
-FROM python:3.8.18-slim-bookworm
-
-ARG PIP_INDEX_URL
+FROM python:3.11.6-slim-bookworm
 
 # gcc is for regex package build (regex is black dependency), see https://github.com/psf/black/issues/1112
 # libffi-dev is for poetry.
@@ -10,7 +8,8 @@ RUN apt-get update && \
 
 # install urllib v1.x manually to avoid 'strict' attribute error
 RUN pip3 install "urllib3<2"
-RUN pip3 install poetry==1.1.12
+ARG POETRY_VERSION
+RUN pip3 install poetry==${POETRY_VERSION}
 
 WORKDIR /cybsi_cloud_sdk
 
@@ -18,6 +17,6 @@ WORKDIR /cybsi_cloud_sdk
 COPY poetry.lock pyproject.toml README.md ./
 COPY ./cybsi/__version__.py ./cybsi/py.typed ./cybsi/
 
-RUN poetry install
+RUN poetry install --with docs
 
 ADD . /cybsi_cloud_sdk

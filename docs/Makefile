@@ -4,6 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    ?= -W
 SPHINXBUILD   ?= poetry run sphinx-build
+PIPCOMPILE    ?= poetry run pip-compile
 PAPER         ?=
 BUILDDIR      ?= _build
 
@@ -59,3 +60,7 @@ doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
+
+.PHONY: update-requirements
+update-requirements:
+	$(PIPCOMPILE) --strip-extras -o requirements.txt requirements.in
