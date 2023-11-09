@@ -63,13 +63,15 @@ docker-clean:
 .PHONY: tools
 tools: #### Install tools needed for development.
 	pip3 install poetry==${POETRY_VERSION}
-	# add plugin to export requirements for documentation from pyproject.toml
-	poetry self add poetry-plugin-export
-	poetry install --with docs,docs-dev
+	poetry install
+
+.PHONY: docs-tools
+docs-tools: #### Install tools needed for documentation development.
+	pip3 install -r ${DOCS_DIR}/requirements.txt
+	pip3 install pip-tools
 
 .PHONY: update-docs-dependencies
 update-docs-dependencies: #### Update pinned docs dependencies.
-	poetry export -f requirements.txt --without-hashes --only docs -o ${DOCS_DIR}/requirements.in
 	make -C ${DOCS_DIR} update-requirements
 
 

@@ -25,28 +25,6 @@ mypy = "1.6.1"
 pytest = "^7.4.3"
 tbump = "6.11.0"
 
-[tool.poetry.group.docs]
-optional = true
-
-[tool.poetry.group.docs.dependencies]
-sphinx = { version = "7.2.6", python = ">=3.9" }
-sphinx-autodoc-typehints = { version = "1.24.1", python = ">=3.9" }
-sphinx-jinja2-compat = { version = "0.2.0", python = ">=3.9" }
-sphinx-toolbox = { version = "3.5.0", python = ">=3.9" }
-pydata-sphinx-theme = { version = "0.14.3", python = ">=3.9" }
-httpx = { version = "0.25.1", python = ">=3.9" }
-enum-tools = { version = "0.11.0", python = ">=3.9" }
-ruamel-yaml-clib = [ # hotfix for incompatible version at slim docker image
-    { version = "<0.2.8", python = "<3.12" },
-    { version = "^0.2.8", python = ">=3.12" }
-]
-
-[tool.poetry.group.docs-dev]
-optional = true
-
-[tool.poetry.group.docs-dev.dependencies]
-pip-tools = "^7.3.0"
-
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

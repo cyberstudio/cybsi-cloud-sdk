@@ -18,7 +18,7 @@ Formatting is performed using ``make lint``. There are no compromises.
 Documentation Contributions
 ---------------------------
 
-Documentation build tools requires at least ``python 3.9``
+We publish documentation to ReadTheDocs. ReadTheDocs builds docs using python3.11 (so are we).
 
 The documentation files live in the ``docs/`` directory. Docs are written in
 `reStructuredText`_, and use `Sphinx`_ to generate the full suite of
@@ -27,20 +27,17 @@ documentation.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Sphinx: http://sphinx-doc.org/index.html
 
-Documentation building requires group ``docs`` of ``pyproject.toml`` to be installed.
-Use ``poetry install --with docs`` to install environment with docs build tools.
-
 Documentation tools update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When documentation tools update required:
+To update documentation tools do:
 
-#. install dependencies ``poetry install --with docs-dev``;
-#. update dependencies at ``docs`` group at ``pyproject.toml``;
+#. install docs dependencies ``make docs-tools``;
+#. update dependencies at ``docs/requirements.in``;
 #. use ``make update-docs-dependencies`` to update dependencies.
 
-``make update-docs-dependencies`` exports dependencies from ``docs`` group at ``pyproject.toml`` to
-``docs/requirements.in``, then it is compiled to ``docs/requirements.txt``.
+``make update-docs-dependencies`` packs packages ``docs/requirements.in`` with its transitive
+dependencies to ``docs/requirements.txt``.
 ``docs/requirements.txt`` contains complete list of packages with specific versions used
 to reproduce same documentation build environment.
 
