@@ -3,8 +3,8 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    ?= -W
-SPHINXBUILD   ?= poetry run sphinx-build
-PIPCOMPILE    ?= poetry run pip-compile
+SPHINXBUILD   ?= sphinx-build
+PIPCOMPILE    ?= pip-compile
 PAPER         ?=
 BUILDDIR      ?= _build
 

@@ -1,6 +1,12 @@
 Release History
 ===============
 
+1.0.7 (2023-11-07)
+------------------
+
+- Update dependencies
+- Add python 3.12 support
+
 1.0.6 (2023-11-03)
 ------------------
 
