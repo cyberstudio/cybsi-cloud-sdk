@@ -1,6 +1,6 @@
 .. _data_model:
 
-Cloud data model
+Cloud Data Model
 ================
 
 .. _object_schemas:
@@ -11,9 +11,7 @@ Object schemas
 Object schema defines attribute composition of the objects and data types of the attributes.
 It's described in JSON Schema format.
 
-This part of the documentation describes rules to create IOCean object schemas.
-
-Example for the object:
+An object like this:
 
 .. code-block:: JSON
 
@@ -25,27 +23,27 @@ Example for the object:
         },
     }
 
-Required JSON Schema:
+Uses JSON Schema:
 
 .. code-block:: JSON
 
     {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "schemaID": "example-schema",
-      "title": "Пример схемы",
+      "title": "Schema example",
       "description": "string",
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
-          "description": "Возможные типы объектов",
+          "description": "Allowed object types",
           "enum": [
             "File"
           ]
         },
         "keys": {
             "type": "array",
-            "description": "Ключи объекта",
+            "description": "Object keys",
             "items": {
                 "type": "object",
                 "properties": {
@@ -60,7 +58,7 @@ Required JSON Schema:
         },
         "context": {
           "type": "object",
-          "description": "Контекст объекта",
+          "description": "Object context",
           "additionalProperties": false,
           "required": [
             "size"
@@ -69,9 +67,11 @@ Required JSON Schema:
             "size": {
               "type": "integer",
               "minimum": 0,
-              "description": "Размер файла в байтах"
+              "description": "File size (bytes)"
             }
           }
         }
       }
     }
+
+Different collections in Cybsi Cloud usually have different schemas.

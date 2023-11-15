@@ -11,7 +11,7 @@ def main():
     config = Config(api_key="the cryptic string")
 
     with Client(config) as client:
-        collection_id = "example-collection"
+        collection_id = "phishing"
         _, changes_cursor = client.iocean.objects.filter(
             collection_id=collection_id,
         )

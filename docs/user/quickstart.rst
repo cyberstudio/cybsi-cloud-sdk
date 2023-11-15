@@ -17,10 +17,16 @@ Let's get started with some simple examples.
 
 Get objects from collection
 ---------------------------
+Cybsi Cloud serves threat intelligence. In our case threat intelligence is condensed into collections of objects.
+Often such objects represent `indicators of compromise <https://en.wikipedia.org/wiki/Indicator_of_compromise>`_.
 
-In the example below we get list of object from the collection.
+In other words, Cybsi Cloud has collections of objects associated with malicious software, phishing sites, botnets and so on. It also has collections of definitely harmless files, IP addresses and domain names.
+
+In the example below we get list of object from the collection named "phishing".
 
 .. literalinclude:: ../../examples/get_collection_objects_chained.py
+
+Use AsyncClient instead of Client if you have an asynchronous application.
 
 .. _get_collection_objects_changes:
 

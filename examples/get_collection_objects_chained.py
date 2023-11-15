@@ -6,10 +6,19 @@ if __name__ == "__main__":
     config = Config(api_key="the cryptic string")
 
     with Client(config) as client:
-        collection_id = "example-collection"
+        collection_id = "phishing"
+
+        # Retrieve collection schema, it describes all attributes
+        # of objects you can encounter in the collection.
+        schema_view = client.iocean.collections.view_schema(
+            collection_id=collection_id)
+        print(schema_view.schema)
+
+        # Retrieve first page of collection objects.
         start_page, _ = client.iocean.objects.filter(
             collection_id=collection_id,
         )
-        for item in chain_pages(start_page):
-            # Do something with an item
-            pass
+
+        for obj in chain_pages(start_page):
+            # Do something with the object.
+            print(obj)

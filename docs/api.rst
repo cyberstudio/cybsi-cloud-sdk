@@ -68,8 +68,3 @@ API Changes
 -----------
 
 Breaking API changes are documented here. There's no such changes yet.
-
-Licensing
----------
-
-TBD
