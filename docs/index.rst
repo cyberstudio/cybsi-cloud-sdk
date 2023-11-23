@@ -73,7 +73,6 @@ you.
    :maxdepth: 1
 
    dev/contributing
-   dev/examples
 
 There are no more guides. You are now guideless.
 Good luck.
