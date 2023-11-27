@@ -3,51 +3,6 @@
 Examples
 ========
 
-.. _register-object-schema-example:
-
-Register object schema
-----------------------
-
-See :ref:`object_schemas` for information about schemas
-
-In the example below we registering JSON Schema of object.
-
-.. literalinclude:: ../../examples/register_object_schema.py
-
-
-.. _add_collection_object:
-
-Add object to collection
-------------------------
-
-See :ref:`object_schemas` for information about schemas
-
-In the example below we add object to collection.
-
-.. literalinclude:: ../../examples/add_collection_object.py
-
-
-.. _add_collection_object_async:
-
-Add object to collection asynchronously
----------------------------------------
-
-This one is the same as above, but for code written in asynchronous style.
-
-In the example below we add object to collection concurrently.
-
-.. literalinclude:: ../../examples/add_collection_object_async.py
-
-
-.. _delete_collection_object:
-
-Delete object from collection
------------------------------
-
-In the example below we delete object from collection.
-
-.. literalinclude:: ../../examples/delete_collection_object.py
-
 .. _pagination-example:
 
 Pagination
@@ -67,3 +22,11 @@ The **second** way is elements traversing. This approach allows you to iterate t
 collections without working with pages. To work with collections as with iterator use `chain_pages`.
 
 .. literalinclude:: ../../examples/get_collection_objects_chained.py
+
+Limit
+^^^^^
+
+You can define page limit. Backend returns the specified maximum number of elements per page.
+Backend overrides this value if limit is not set or value is out of bounds.
+
+.. literalinclude:: ../../examples/page_limit.py

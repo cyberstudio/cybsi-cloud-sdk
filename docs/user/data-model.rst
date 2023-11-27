@@ -1,30 +1,49 @@
-#!/usr/bin/env python3
-import json
+.. _data_model:
 
-from cybsi.cloud import Client, Config
-from cybsi.cloud.error import ConflictError
+Cloud Data Model
+================
 
-if __name__ == "__main__":
-    config = Config(api_key="the cryptic string")
-    client = Client(config)
+.. _object_schemas:
 
-    jsonSchema = """
+Object schemas
+--------------
+
+Object schema defines attribute composition of the objects and data types of the attributes.
+It's described in JSON Schema format.
+
+An object like this:
+
+.. code-block:: JSON
+
+    {
+        "type": "File",
+        "keys": [{"type":"MD5Hash", "value": "627fcdb6cc9a5e16d657ca6cdef0a6bb"}],
+        "context": {
+            "size": 1024
+        },
+    }
+
+Uses JSON Schema:
+
+.. code-block:: JSON
+
     {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "schemaID": "example-schema",
-      "title": "Пример схемы",
+      "title": "Schema example",
       "description": "string",
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
-          "description": "Возможные типы объектов",
+          "description": "Allowed object types",
           "enum": [
             "File"
           ]
         },
         "keys": {
             "type": "array",
+            "description": "Object keys",
             "items": {
                 "type": "object",
                 "properties": {
@@ -39,7 +58,7 @@ if __name__ == "__main__":
         },
         "context": {
           "type": "object",
-          "description": "Контекст объекта",
+          "description": "Object context",
           "additionalProperties": false,
           "required": [
             "size"
@@ -48,23 +67,11 @@ if __name__ == "__main__":
             "size": {
               "type": "integer",
               "minimum": 0,
-              "description": "Размер файла в байтах"
+              "description": "File size (bytes)"
             }
           }
         }
       }
-    }"""
+    }
 
-    schema_id = None
-    schema = json.loads(jsonSchema)
-    try:  # register object schema
-        sch_ref = client.iocean.schemas.register(schema)
-        schema_id = sch_ref.schema_id
-    except ConflictError:
-        # handle Duplicate Error here
-        exit(1)
-
-    view = client.iocean.schemas.view(schema_id)
-    print(view.schema)
-
-    client.close()
+Different collections in Cybsi Cloud usually have different schemas.

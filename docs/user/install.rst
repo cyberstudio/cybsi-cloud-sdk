@@ -5,7 +5,7 @@ Installation of Cybsi Cloud SDK
 
 Latest version and its dependencies
 -----------------------------------------------
-We host SDK on PyPI registry.
+We host SDK on `PyPI <https://pypi.org/project/cybsi-cloud-sdk/>`_.
 
 To install it from registry, simply run the following command in your terminal of choice:
 
@@ -13,7 +13,7 @@ To install it from registry, simply run the following command in your terminal o
 
   $ pip3 install cybsi-cloud-sdk
 
-You can also get a specific version by running a command like ``pip3 install cybsi-cloud-sdk==1.0.0``.
+You can also get a specific version by running a command like ``pip3 install cybsi-cloud-sdk==1.0.7``.
 
 If you use Poetry to manage your dependencies, add the following sections to your `pyproject.toml` file:
 
@@ -21,7 +21,7 @@ If you use Poetry to manage your dependencies, add the following sections to you
 
     ....
     [tool.poetry.dependencies]
-    cybsi-cloud-sdk = "1.0.0" # See last version of Cybsi Cloud SDK
+    cybsi-cloud-sdk = "1.0.7" # See last version of Cybsi Cloud SDK
     ...
 
 Source code

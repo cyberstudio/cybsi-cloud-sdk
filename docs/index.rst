@@ -28,12 +28,12 @@ background information about Cybsi Cloud, then focuses on step-by-step
 instructions for getting the most out of Cybsi Cloud SDK.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    user/install
    user/quickstart
-   user/pagination
    user/examples
+   user/data-model
    user/advanced
    user/authentication
 
@@ -48,7 +48,6 @@ this part of the documentation is for you.
    :maxdepth: 2
 
    api
-   user/data_model
 
 
 The Community Guide
@@ -71,7 +70,7 @@ If you want to contribute to the project, this part of the documentation is for
 you.
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
 
    dev/contributing
 
