@@ -199,6 +199,10 @@ class SemanticErrorCodes(CybsiAPIEnum):
     """schemaID parameter can't be changed."""
     SchemaNotFound = "SchemaNotFound"
     """The specified schema is not found"""
+    InvalidRequestLimit = "InvalidRequestLimit"
+    """The specified request limit cannot be set."""
+    LimitSetConflict = "LimitSetConflict"
+    """The limit set has conflicts."""
 
     # Objects
     InvalidKeyFormat = "InvalidKeyFormat"

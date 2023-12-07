@@ -10,8 +10,7 @@ if __name__ == "__main__":
 
         # Retrieve collection schema, it describes all attributes
         # of objects you can encounter in the collection.
-        schema_view = client.iocean.collections.view_schema(
-            collection_id=collection_id)
+        schema_view = client.iocean.collections.view_schema(collection_id=collection_id)
         print(schema_view.schema)
 
         # Retrieve first page of collection objects.
