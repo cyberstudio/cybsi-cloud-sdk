@@ -4,7 +4,8 @@ Release History
 1.1.0 (2023-12-08)
 ------------------
 
-- Add api-key limits
+- Add api-key limits 
+- Add insight schemas API
 
 1.0.8 (2023-12-06)
 ------------------

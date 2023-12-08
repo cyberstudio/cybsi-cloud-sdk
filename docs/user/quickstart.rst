@@ -36,3 +36,13 @@ Get object changes in the collection
 In the example below we get objects changes happened in the collection.
 
 .. literalinclude:: ../../examples/get_collection_objects_changes.py
+
+.. _working_with_tasks:
+
+Working with tasks
+------------------
+
+You also can working with enrichment tasks. Create tasks for enriching indicators and get their results.
+The results of the enrichment are objects corresponding to a given schema.
+
+See :ref:`enrichment tasks examples <insight>` for more information.

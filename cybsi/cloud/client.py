@@ -1,5 +1,6 @@
 from .auth import APIKeyAuth, AuthAPI
 from .client_config import Config
+from .insight.api import InsightAPI, InsightAsyncAPI
 from .internal import AsyncHTTPConnector, HTTPConnector
 from .iocean import IOCeanAPI, IOCeanAsyncAPI
 
@@ -77,6 +78,11 @@ class Client:
         """IOCean API handle."""
         return IOCeanAPI(self._connector)
 
+    @property
+    def insight(self) -> InsightAPI:
+        """Insight API handle."""
+        return InsightAPI(self._connector)
+
 
 class AsyncClient:
     """The asynchronous analog of :class:`Client`.
@@ -120,3 +126,8 @@ class AsyncClient:
     def iocean(self) -> IOCeanAsyncAPI:
         """IOCean asynchronous API handle."""
         return IOCeanAsyncAPI(self._connector)
+
+    @property
+    def insight(self) -> InsightAsyncAPI:
+        """Insight asynchronous API handle."""
+        return InsightAsyncAPI(self._connector)
