@@ -1,5 +1,6 @@
 from .auth import APIKeyAuth, AuthAPI
 from .client_config import Config
+from .filebox import FileboxAPI, FileboxAsyncAPI
 from .insight.api import InsightAPI, InsightAsyncAPI
 from .internal import AsyncHTTPConnector, HTTPConnector
 from .iocean import IOCeanAPI, IOCeanAsyncAPI
@@ -83,6 +84,11 @@ class Client:
         """Insight API handle."""
         return InsightAPI(self._connector)
 
+    @property
+    def filebox(self) -> FileboxAPI:
+        """Filebox API handle."""
+        return FileboxAPI(self._connector)
+
 
 class AsyncClient:
     """The asynchronous analog of :class:`Client`.
@@ -131,3 +137,8 @@ class AsyncClient:
     def insight(self) -> InsightAsyncAPI:
         """Insight asynchronous API handle."""
         return InsightAsyncAPI(self._connector)
+
+    @property
+    def filebox(self) -> FileboxAsyncAPI:
+        """Filebox API handle."""
+        return FileboxAsyncAPI(self._connector)
