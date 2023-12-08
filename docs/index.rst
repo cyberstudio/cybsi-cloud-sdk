@@ -34,6 +34,7 @@ instructions for getting the most out of Cybsi Cloud SDK.
    user/quickstart
    user/examples
    user/data-model
+   user/files
    user/advanced
    user/authentication
    user/enrichment
