@@ -1,4 +1,4 @@
-__version__ = "1.0.8"
+__version__ = "1.1.0"
 __title__ = "cybsi-cloud-sdk"
 __description__ = "Cybsi Cloud development kit"
 __license__ = "Apache License 2.0"
