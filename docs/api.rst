@@ -42,6 +42,13 @@ IOCean
     :imported-members:
     :inherited-members:
 
+Insight
+~~~~~~~
+.. automodule:: cybsi.cloud.insight
+    :members:
+    :imported-members:
+    :inherited-members:
+
 Common views and data types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: cybsi.cloud.Null
