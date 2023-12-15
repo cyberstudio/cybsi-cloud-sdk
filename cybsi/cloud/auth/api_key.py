@@ -18,6 +18,7 @@ from ..internal import (
     rfc3339_timestamp,
 )
 from ..pagination import Cursor, Page
+from .limits import RequestLimitForm, RequestLimitView
 from .permission import ResourcePermissionForm, ResourcePermissionView
 from .token import TokenView
 
@@ -196,12 +197,14 @@ class APIKeyForm(JsonObjectForm):
         expires_at: Expiration date.
             The API-Key is automatically disabled after the expiration date.
         description: API-Key description.
+        request_limits: List of API-Key request limits.
     """
 
     def __init__(
         self,
         permissions: Iterable[ResourcePermissionForm],
         *,
+        request_limits: Optional[Iterable[RequestLimitForm]] = None,
         expires_at: Optional[datetime] = None,
         description: Optional[str] = None,
     ):
@@ -210,6 +213,8 @@ class APIKeyForm(JsonObjectForm):
             self._data["expiresAt"] = rfc3339_timestamp(expires_at)
         if description is not None:
             self._data["description"] = description
+        if request_limits is not None:
+            self._data["requestLimits"] = [limit.json() for limit in request_limits]
         self._data["permissions"] = [perm.json() for perm in permissions]
 
 
@@ -268,3 +273,8 @@ class APIKeyView(JsonObjectView):
     def permissions(self) -> List[ResourcePermissionView]:
         """List of permissions."""
         return [ResourcePermissionView(perm) for perm in self._get("permissions")]
+
+    @property
+    def request_limits(self) -> List[RequestLimitView]:
+        """List of request limits."""
+        return [RequestLimitView(limit) for limit in self._get("requestLimits")]
