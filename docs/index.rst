@@ -36,6 +36,7 @@ instructions for getting the most out of Cybsi Cloud SDK.
    user/data-model
    user/advanced
    user/authentication
+   user/enrichment
 
 
 The API Documentation / Guide
