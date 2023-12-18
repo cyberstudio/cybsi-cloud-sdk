@@ -81,6 +81,9 @@ class HTTPConnector:
     ) -> httpx.Response:
         return self._do("DELETE", path, params=params, **kwargs)
 
+    def do_head(self, path: str, **kwargs) -> httpx.Response:
+        return self._do("HEAD", path, **kwargs)
+
     def _do(self, method: str, path: str, stream=False, **kwargs):
         """Do HTTP request.
 
@@ -110,7 +113,8 @@ class HTTPConnector:
             if resp.stream:  # type: ignore
                 # read stream data to raise the error
                 resp.read()
-            _raise_cybsi_error(resp)
+            is_body_present = method.upper() != "HEAD"
+            _raise_cybsi_error(resp, body_present=is_body_present)
 
         return resp
 
@@ -181,6 +185,9 @@ class AsyncHTTPConnector:
     ) -> httpx.Response:
         return await self._do("DELETE", path, params=params, **kwargs)
 
+    async def do_head(self, path: str, **kwargs) -> httpx.Response:
+        return await self._do("HEAD", path, **kwargs)
+
     async def _do(self, method: str, path: str, stream=False, **kwargs):
         """Do HTTP request.
 
@@ -210,6 +217,7 @@ class AsyncHTTPConnector:
             if resp.stream:  # type: ignore
                 # read stream data to raise the error
                 await resp.aread()
-            _raise_cybsi_error(resp)
+            is_body_present = method.upper() != "HEAD"
+            _raise_cybsi_error(resp, body_present=is_body_present)
 
         return resp

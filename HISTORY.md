@@ -6,6 +6,7 @@ Release History
 
 - Add api-key limits 
 - Add insight schemas API
+- Add filebox API
 
 1.0.8 (2023-12-06)
 ------------------

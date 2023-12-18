@@ -152,6 +152,11 @@ class RequestEntityTooLargeError(APIError):
         super().__init__(413, content, header="request content is too large", suffix="")
 
 
+class RangeNotSatisfiableError(APIError):
+    def __init__(self, content: JsonObject) -> None:
+        super().__init__(416, content, header="range is not satisfiable", suffix="")
+
+
 class SemanticError(APIError):
     """Semantic error. Retry will not work (almost always).
 
@@ -269,14 +274,18 @@ _error_mapping = {
     409: ConflictError,
     412: ResourceModifiedError,
     413: RequestEntityTooLargeError,
+    416: RangeNotSatisfiableError,
     422: SemanticError,
 }
 
 
-def _raise_cybsi_error(resp: httpx.Response) -> None:
+def _raise_cybsi_error(resp: httpx.Response, body_present: bool = True) -> None:
     err_cls = _error_mapping.get(resp.status_code, None)
     if err_cls is not None:
-        raise err_cls(resp.json())
+        if body_present:
+            raise err_cls(resp.json())
+        else:
+            raise err_cls({})
 
     raise CybsiError(
         f"unexpected response status code: {resp.status_code}. "

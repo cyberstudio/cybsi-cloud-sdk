@@ -28,7 +28,6 @@ Client configuration
 
 Auth
 ~~~~
-
 .. automodule:: cybsi.cloud.auth
     :members:
     :imported-members:
@@ -45,6 +44,13 @@ IOCean
 Insight
 ~~~~~~~
 .. automodule:: cybsi.cloud.insight
+    :members:
+    :imported-members:
+    :inherited-members:
+
+Filebox
+~~~~~~~
+.. automodule:: cybsi.cloud.filebox
     :members:
     :imported-members:
     :inherited-members:
