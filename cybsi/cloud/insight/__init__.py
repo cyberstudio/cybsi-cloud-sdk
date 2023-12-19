@@ -9,3 +9,14 @@ from .schemas import (
     SchemaCommonView,
     SchemaRegistrationView,
 )
+from .tasks import (
+    ObjectKeyForm,
+    TaskAPI,
+    TaskAsyncAPI,
+    TaskErrorView,
+    TaskForm,
+    TaskParamsView,
+    TaskRegistrationView,
+    TaskState,
+    TaskView,
+)

@@ -113,8 +113,7 @@ class HTTPConnector:
             if resp.stream:  # type: ignore
                 # read stream data to raise the error
                 resp.read()
-            is_body_present = method.upper() != "HEAD"
-            _raise_cybsi_error(resp, body_present=is_body_present)
+            _raise_cybsi_error(resp)
 
         return resp
 
@@ -217,7 +216,6 @@ class AsyncHTTPConnector:
             if resp.stream:  # type: ignore
                 # read stream data to raise the error
                 await resp.aread()
-            is_body_present = method.upper() != "HEAD"
-            _raise_cybsi_error(resp, body_present=is_body_present)
+            _raise_cybsi_error(resp)
 
         return resp
