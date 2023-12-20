@@ -6,6 +6,7 @@ from cybsi.__version__ import __version__
 
 from ..api import Tag
 from ..error import CybsiError, _raise_cybsi_error
+from ..internal.multipart import apply_async_multipart_stream
 
 _BASIC_HEADERS = {
     "User-Agent": f"cybsi-cloud-client/v{__version__}",
@@ -13,6 +14,8 @@ _BASIC_HEADERS = {
 }
 
 _IF_MATCH_HEADER = "If-Match"
+
+apply_async_multipart_stream()
 
 
 class HTTPConnector:

@@ -1,23 +1,17 @@
 #!/usr/bin/env python3
-import asyncio
 import uuid
 
-from cybsi.cloud import AsyncClient, Config
-
-
-async def main():
-    config = Config(api_url="https://cloud.cloud", api_key="the cryptic string")
-
-    async with AsyncClient(config) as client:
-        file_id = uuid.UUID("6579dc90-18ab-4b2b-947b-dfa44bd7dcd5")
-        with open("/tmp/out.dat", "wb") as f:
-            async with await client.filebox.files.download(file_id) as content:
-                buf_size = 4096
-                buf = await content.read(buf_size)
-                while buf:
-                    f.write(buf)
-                    buf = await content.read(buf_size)
-
+from cybsi.cloud import Client, Config
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    config = Config(api_key="the cryptic string")
+    file_id = uuid.UUID("5d63fd9a-4ffb-46e7-afa1-cfbb0227ad3d")
+    buf_size = 4096
+
+    with Client(config) as client:
+        with open("/tmp/out.dat", "wb") as f:
+            with client.filebox.files.download(file_id) as content:
+                buf = content.read(buf_size)
+                while buf:
+                    f.write(buf)
+                    buf = content.read(buf_size)
