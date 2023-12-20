@@ -220,6 +220,10 @@ class SemanticErrorCodes(CybsiAPIEnum):
     """Object validation by schema failed."""
     CursorOutOfRange = "CursorOutOfRange"
     """Cursor for collection changes is obsolete."""
+    InvalidFilePart = "InvalidFilePart"
+    """File part is invalid"""
+    MissingFilePart = "MissingFilePart"
+    """File part is missing"""
 
 
 class ErrorView(dict):
