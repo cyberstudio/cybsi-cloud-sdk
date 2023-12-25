@@ -34,12 +34,6 @@ Auth
     :inherited-members:
     :exclude-members: APIKeyAuth
 
-IOC
-~~~~~~
-.. automodule:: cybsi.cloud.ioc
-    :members:
-    :imported-members:
-    :inherited-members:
 
 IOCean
 ~~~~~~

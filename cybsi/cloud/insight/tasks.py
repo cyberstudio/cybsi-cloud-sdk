@@ -5,9 +5,31 @@ from enum_tools import document_enum
 
 from ..enum import CybsiAPIEnum
 from ..internal import BaseAPI, BaseAsyncAPI, JsonObject, JsonObjectForm, JsonObjectView
-from ..ioc import ObjectKeyType, ObjectKeyView
 
 _PATH = "/insight/tasks"
+
+
+@document_enum
+class ObjectKeyType(CybsiAPIEnum):
+    """Object key type."""
+
+    MD5Hash = "MD5Hash"
+    SHA1Hash = "SHA1Hash"
+    SHA256Hash = "SHA256Hash"
+    SHA512Hash = "SHA512Hash"
+    DomainName = "DomainName"
+    URL = "URL"
+    IPAddress = "IPAddress"
+
+
+@document_enum
+class ObjectType(CybsiAPIEnum):
+    """Object type."""
+
+    File = "File"
+    DomainName = "DomainName"
+    URL = "URL"
+    IPAddress = "IPAddress"
 
 
 @document_enum
@@ -123,6 +145,20 @@ class TaskRegistrationView(JsonObjectView):
     def id(self) -> str:
         """Task identifier."""
         return self._get("taskID")
+
+
+class ObjectKeyView(JsonObjectView):
+    """Object key view"""
+
+    @property
+    def type(self) -> ObjectKeyType:
+        """Object key type"""
+        return ObjectKeyType.from_string(self._get("type"))
+
+    @property
+    def value(self) -> str:
+        """Key value."""
+        return self._get("value")
 
 
 class TaskParamsView(JsonObjectView):
