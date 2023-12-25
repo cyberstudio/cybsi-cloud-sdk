@@ -11,6 +11,9 @@ from .schemas import (
 )
 from .tasks import (
     ObjectKeyForm,
+    ObjectKeyType,
+    ObjectType,
+    ObjectKeyView,
     TaskAPI,
     TaskAsyncAPI,
     TaskErrorView,

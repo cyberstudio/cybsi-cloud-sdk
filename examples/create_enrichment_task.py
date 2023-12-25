@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from cybsi.cloud import Client, Config
 from cybsi.cloud.insight import ObjectKeyForm, TaskForm
-from cybsi.cloud.ioc import ObjectKeyType
+from cybsi.cloud.insight.tasks import ObjectKeyType
 
 if __name__ == "__main__":
     config = Config(api_key="the cryptic string")
