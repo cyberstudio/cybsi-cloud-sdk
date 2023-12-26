@@ -13,11 +13,11 @@ from .collection import (
 from .objects import (
     ObjectAPI,
     ObjectsAsyncAPI,
+    ObjectKeyView,
+    ObjectView,
+    ObjectChangeView,
     ObjectKeyType,
     ObjectType,
-    ObjectView,
-    ObjectKeyView,
-    ObjectChangeView,
     ObjectOperation,
 )
 from .schemas import (

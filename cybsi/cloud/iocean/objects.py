@@ -8,6 +8,8 @@ from ..enum import CybsiAPIEnum
 from ..internal import BaseAPI, BaseAsyncAPI, JsonObject, JsonObjectView
 from ..pagination import AsyncPage, Cursor, Page
 
+_PATH = "/iocean/collections/{}/objects"
+
 
 @document_enum
 class ObjectKeyType(CybsiAPIEnum):
@@ -32,9 +34,6 @@ class ObjectType(CybsiAPIEnum):
     URL = "URL"
     IPAddress = "IPAddress"
     IPNetwork = "IPNetwork"
-
-
-_PATH = "/iocean/collections/{}/objects"
 
 
 @document_enum

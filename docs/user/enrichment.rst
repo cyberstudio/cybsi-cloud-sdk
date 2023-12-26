@@ -21,3 +21,18 @@ In the example bellow we get list of enrichment result object schemas.
 And one more example of getting schema by ID.
 
 .. literalinclude:: ../../examples/get_enrichment_results_schema.py
+
+.. _enrichment_tasks:
+
+Enrichment tasks
+----------------
+
+Insight service enriches object data.
+
+In the example bellow you create new enrichment task.
+
+.. literalinclude:: ../../examples/create_enrichment_task.py
+
+And example of getting enrichment task result.
+
+.. literalinclude:: ../../examples/get_enrichment_task.py

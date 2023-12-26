@@ -89,8 +89,8 @@ class InvalidRequestError(APIError):
     InvalidPathArgument = "InvalidPathArgument"
     InvalidQueryArgument = "InvalidQueryArgument"
 
-    def __init__(self, content: JsonObject) -> None:
-        super().__init__(400, content, header="invalid request")
+    def __init__(self, resp: httpx.Response) -> None:
+        super().__init__(400, resp.json(), header="invalid request")
 
 
 class UnauthorizedError(APIError):
@@ -98,15 +98,15 @@ class UnauthorizedError(APIError):
 
     Unauthorized = "Unauthorized"
 
-    def __init__(self, content: JsonObject) -> None:
-        super().__init__(401, content, header="operation not authorized")
+    def __init__(self, resp: httpx.Response) -> None:
+        super().__init__(401, resp.json(), header="operation not authorized")
 
 
 class ForbiddenError(APIError):
     """Operation was forbidden. Retry will not work unless system is reconfigured."""
 
-    def __init__(self, content: JsonObject) -> None:
-        super().__init__(403, content, header="operation forbidden")
+    def __init__(self, resp: httpx.Response) -> None:
+        super().__init__(403, resp.json(), header="operation forbidden")
 
     @property
     def code(self) -> "ForbiddenErrorCodes":
@@ -117,15 +117,15 @@ class ForbiddenError(APIError):
 class NotFoundError(APIError):
     """Requested resource not found. Retry will never work."""
 
-    def __init__(self, content: JsonObject) -> None:
+    def __init__(self, resp: httpx.Response) -> None:
         super().__init__(404, {}, header="resource not found", suffix="")
 
 
 class ConflictError(APIError):
     """Resource already exists. Retry will never work."""
 
-    def __init__(self, content: JsonObject) -> None:
-        super().__init__(409, content, header="resource already exists")
+    def __init__(self, resp: httpx.Response) -> None:
+        super().__init__(409, resp.json(), header="resource already exists")
 
     @property
     def code(self) -> "ConflictErrorCodes":
@@ -139,17 +139,19 @@ class ResourceModifiedError(APIError):
     Read the updated resource from API, and apply your modifications again.
     """
 
-    def __init__(self, content: JsonObject) -> None:
+    def __init__(self, resp: httpx.Response) -> None:
         super().__init__(
-            412, content, header="resource was modified since last read", suffix=""
+            412, resp.json(), header="resource was modified since last read", suffix=""
         )
 
 
 class RequestEntityTooLargeError(APIError):
     """Request content is too large."""
 
-    def __init__(self, content: JsonObject) -> None:
-        super().__init__(413, content, header="request content is too large", suffix="")
+    def __init__(self, resp: httpx.Response) -> None:
+        super().__init__(
+            413, resp.json(), header="request content is too large", suffix=""
+        )
 
 
 class RangeNotSatisfiableError(APIError):
@@ -165,13 +167,35 @@ class SemanticError(APIError):
     For example, we're trying to unpack an artifact, but the artifact is not an archive.
     """
 
-    def __init__(self, content: JsonObject) -> None:
-        super().__init__(422, content, header="semantic error")
+    def __init__(self, resp: httpx.Response) -> None:
+        super().__init__(422, resp.json(), header="semantic error")
 
     @property
     def code(self) -> "SemanticErrorCodes":
         """Error code."""
         return SemanticErrorCodes(self._view.code)
+
+
+class TooManyRequestsError(APIError):
+    """Too many requests error.
+
+    Retry request after some time.
+    """
+
+    def __init__(self, resp: httpx.Response) -> None:
+        super().__init__(429, resp.json(), header="too many requests error")
+        retry_after = resp.headers.get("Retry-After")
+        self._retry_after = int(retry_after) if retry_after is not None else None
+
+    @property
+    def code(self) -> "TooManyRequestsErrorCodes":
+        """Error code."""
+        return TooManyRequestsErrorCodes(self._view.code)
+
+    @property
+    def retry_after(self) -> Optional[int]:
+        """Period in seconds after which request could be repeated."""
+        return self._retry_after
 
 
 @document_enum
@@ -220,6 +244,18 @@ class SemanticErrorCodes(CybsiAPIEnum):
     """Object validation by schema failed."""
     CursorOutOfRange = "CursorOutOfRange"
     """Cursor for collection changes is obsolete."""
+
+    # Filebox
+    FileNotFound = "FileNotFound"
+    """File not found."""
+
+
+@document_enum
+class TooManyRequestsErrorCodes(CybsiAPIEnum):
+    """Too many requests error codes."""
+
+    LimitExceeded = "LimitExceeded"
+    """Request limit exceeded."""
 
 
 class ErrorView(dict):
@@ -276,16 +312,14 @@ _error_mapping = {
     413: RequestEntityTooLargeError,
     416: RangeNotSatisfiableError,
     422: SemanticError,
+    429: TooManyRequestsError,
 }
 
 
-def _raise_cybsi_error(resp: httpx.Response, body_present: bool = True) -> None:
+def _raise_cybsi_error(resp: httpx.Response) -> None:
     err_cls = _error_mapping.get(resp.status_code, None)
     if err_cls is not None:
-        if body_present:
-            raise err_cls(resp.json())
-        else:
-            raise err_cls({})
+        raise err_cls(resp)
 
     raise CybsiError(
         f"unexpected response status code: {resp.status_code}. "
