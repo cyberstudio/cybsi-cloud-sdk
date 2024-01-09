@@ -25,7 +25,7 @@ lint:
 
 .PHONY: test
 test:
-	#poetry run pytest --tb=native --verbose ./tests/
+	poetry run pytest --tb=native --verbose ./tests/
 
 .PHONY: build-docs
 build-docs:
