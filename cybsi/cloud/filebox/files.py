@@ -1,15 +1,27 @@
 import uuid
-from abc import abstractmethod
-from typing import AsyncIterator, Iterator, Optional, Protocol, Tuple
+from typing import Any, AsyncIterator, Dict, Iterator, Optional, Tuple
 
 from httpx import Response
 
 from ..error import CybsiError
 from ..internal import BaseAPI, BaseAsyncAPI, JsonObjectView
+from ..internal.buffer import (
+    AsyncBufferedReader,
+    AsyncBytesReader,
+    AsyncLimitedReader,
+    BufferedReader,
+    BytesReader,
+    LimitedReader,
+)
+from ..internal.multipart import AsyncStreamWrapper
 
-_PATH = "filebox/files"
-_DEFAULT_PART_SIZE = 10 * (1 << 20)  # 10 Mb
+MB = 1 << 20
+_DEFAULT_PART_SIZE = 5 * MB
+_MULTIPART_UPLOAD_MAX_SIZE = 50 * MB
 _DEFAULT_BUF_SIZE = 65536
+
+_FILES_PATH = "filebox/files"
+_SESSIONS_PATH = "filebox/sessions"
 
 _CONTENT_RANGE_HEADER = "Content-Range"
 _CONTENT_LENGTH_HEADER = "Content-Length"
@@ -19,16 +31,17 @@ _RANGE_HEADER = "Range"
 class FilesAPI(BaseAPI):
     """Files API."""
 
-    def upload(self, data: "BytesReader", *, name: str) -> "FileRefView":
+    def upload(self, data: BytesReader, *, name: str, size: int = -1) -> "FileRefView":
         """Upload a file.
 
-        The maximum file size allowed is 50 MiB.
+        The maximum file size is 1GiB.
 
         Note:
             Calls `PUT /filebox/files`.
         Args:
             data (bytes): The data of the file.
             name (str): The name of the file.
+            size (int): The size of the file.
         Return:
             The reference to the uploaded file.
         Raises:
@@ -38,11 +51,28 @@ class FilesAPI(BaseAPI):
                 Provided file data is too large.
         """
 
-        files = {"file": (name, data)}
-        r = self._connector.do_put(_PATH, files=files, stream=True)
-        r.read()  # in stream mode we need to read before use json().
+        if size <= 0 or size > _MULTIPART_UPLOAD_MAX_SIZE:
+            return self._upload_file_by_parts(data, size=size)
+
+        form = {"file": (name, data)}
+        r = self._connector.do_put(_FILES_PATH, files=form, stream=True)
+        r.read()  # in stream mode we need to read the body before use json().
 
         return FileRefView(r.json())
+
+    def _upload_file_by_parts(
+        self, data: BytesReader, *, size: int = -1
+    ) -> "FileRefView":
+        part_size = _DEFAULT_PART_SIZE
+        session = self.create_session(part_size=part_size)
+
+        parts = _iter_parts(data, part_size=part_size, total_size=size)
+        for part_num, (part, part_size) in enumerate(parts, start=1):
+            self.upload_session_part(
+                part, session_id=session.id, part_number=part_num, size=part_size
+            )
+
+        return self.complete_session(session_id=session.id)
 
     def get_file_size(self, file_id: uuid.UUID) -> int:
         """Get a file size.
@@ -59,11 +89,82 @@ class FilesAPI(BaseAPI):
             :class:`~cybsi.cloud.error.NotFoundError`: File not found.
         """
 
-        r = self._connector.do_head(f"{_PATH}/{file_id}/content")
+        r = self._connector.do_head(f"{_FILES_PATH}/{file_id}/content")
         size = r.headers.get(_CONTENT_LENGTH_HEADER).strip()
         if size:
             return int(size)
         return 0
+
+    def create_session(self, part_size: int) -> "SessionRefView":
+        """Create an upload session.
+
+        Note:
+            Calls `POST /filebox/sessions`.
+        Args:
+            part_size: The size of file parts.
+        Return:
+            The reference to the created session.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+        """
+
+        body = {"partSize": part_size}
+        r = self._connector.do_post(path=_SESSIONS_PATH, json=body)
+        return SessionRefView(r.json())
+
+    def upload_session_part(
+        self, part: BytesReader, *, session_id: uuid.UUID, part_number, size: int
+    ):
+        """Upload the file part.
+
+        Note:
+            Calls `POST /filebox/sessions/{sessionID}/parts`.
+        Args:
+            part: The file part data.
+            session_id: The identifier of the upload session.
+            part_number: The part number.
+            size: The part size.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+            :class:`~cybsi.cloud.error.NotFoundError`: File not found.
+            :class:`~cybsi.cloud.error.RequestEntityTooLargeError`:
+                Provided file data is too large.
+        """
+
+        path = f"{_SESSIONS_PATH}/{session_id}/parts"
+        form = {
+            "number": str(part_number),
+            "partSize": str(size),
+            "filePart": part,
+        }
+
+        self._connector.do_put(path, files=form)
+
+    def complete_session(self, session_id: uuid.UUID) -> "FileRefView":
+        """Complete the session.
+
+        Note:
+            Calls `POST /filebox/sessions/{sessionID}/completed`.
+        Args:
+            session_id: The identifier of the upload session.
+        Return:
+            The reference to the uploaded file.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+            :class:`~cybsi.cloud.error.NotFoundError`: File not found.
+            :class:`~cybsi.cloud.error.SemanticError`: Semantic request error.
+        Note:
+            Semantic error codes specific for this method:
+              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidFilePart`
+              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidFilePart`
+        """
+
+        path = f"{_SESSIONS_PATH}/{session_id}/completed"
+        r = self._connector.do_post(path=path)
+        return FileRefView(r.json())
 
     def download_part(
         self, file_id: uuid.UUID, *, start: int, end: int
@@ -91,7 +192,7 @@ class FilesAPI(BaseAPI):
 
         headers = {_RANGE_HEADER: f"bytes={start}-{end}"}
         part = self._connector.do_get(
-            path=f"{_PATH}/{file_id}/content", headers=headers, stream=True
+            path=f"{_FILES_PATH}/{file_id}/content", headers=headers, stream=True
         )
         return FileContent((p for p in [part]))
 
@@ -112,7 +213,7 @@ class FilesAPI(BaseAPI):
 
         headers = {_RANGE_HEADER: f"bytes=0-{_DEFAULT_PART_SIZE}"}
         first_part = self._connector.do_get(
-            path=f"{_PATH}/{file_id}/content", headers=headers, stream=True
+            path=f"{_FILES_PATH}/{file_id}/content", headers=headers, stream=True
         )
 
         def parts_iter() -> Iterator[Response]:
@@ -126,7 +227,7 @@ class FilesAPI(BaseAPI):
                 start, end = end + 1, end + _DEFAULT_PART_SIZE
                 h = {"Range": f"bytes={start}-{end}"}
                 part = self._connector.do_get(
-                    path=f"{_PATH}/{file_id}/content", headers=h, stream=True
+                    path=f"{_FILES_PATH}/{file_id}/content", headers=h, stream=True
                 )
                 yield part
                 start, end, _ = _parse_content_range(
@@ -140,16 +241,19 @@ class FilesAPI(BaseAPI):
 class FilesAsyncAPI(BaseAsyncAPI):
     """Files asynchronous API"""
 
-    async def upload(self, data: "BytesReader", *, name: str) -> "FileRefView":
+    async def upload(
+        self, data: AsyncBytesReader, *, name: str, size: int = -1
+    ) -> "FileRefView":
         """Upload a file.
 
-        The maximum file size allowed is 50 MiB.
+        The maximum file size is 1GiB.
 
         Note:
             Calls `PUT /filebox/files`.
         Args:
             data (bytes): The data of the file.
             name (str): The name of the file.
+            size (int): The size of the file.
         Return:
             The reference to the uploaded file.
         Raises:
@@ -159,11 +263,29 @@ class FilesAsyncAPI(BaseAsyncAPI):
                 Provided file data is too large.
         """
 
-        files = {"file": (name, data)}
-        r = await self._connector.do_put(_PATH, files=files, stream=True)
+        if size <= 0 or size > _MULTIPART_UPLOAD_MAX_SIZE:
+            return await self._upload_file_by_parts(data, name=name, size=size)
+
+        form: Dict[str, Any] = {"file": (name, AsyncStreamWrapper(data, size))}
+        r = await self._connector.do_put(_FILES_PATH, files=form, stream=True)
         await r.aread()  # in stream mode we need to read before use json().
 
         return FileRefView(r.json())
+
+    async def _upload_file_by_parts(
+        self, data: AsyncBytesReader, *, name: str, size: int = -1
+    ) -> "FileRefView":
+        session = await self.create_session(part_size=_DEFAULT_PART_SIZE)
+        parts = _aiter_parts(data, part_size=_DEFAULT_PART_SIZE, total_size=size)
+
+        part_num = 0
+        async for part, part_size in parts:
+            part_num += 1
+            await self.upload_session_part(
+                part, session_id=session.id, part_number=part_num, size=part_size
+            )
+
+        return await self.complete_session(session_id=session.id)
 
     async def get_file_size(self, file_id: uuid.UUID) -> int:
         """Get a file size.
@@ -180,7 +302,7 @@ class FilesAsyncAPI(BaseAsyncAPI):
             :class:`~cybsi.cloud.error.NotFoundError`: File not found.
         """
 
-        r = await self._connector.do_head(f"{_PATH}/{file_id}/content")
+        r = await self._connector.do_head(f"{_FILES_PATH}/{file_id}/content")
         size = r.headers.get(_CONTENT_LENGTH_HEADER).strip()
         if size:
             return int(size)
@@ -212,13 +334,83 @@ class FilesAsyncAPI(BaseAsyncAPI):
 
         headers = {_RANGE_HEADER: f"bytes={start}-{end}"}
         part = await self._connector.do_get(
-            path=f"{_PATH}/{file_id}/content", headers=headers, stream=True
+            path=f"{_FILES_PATH}/{file_id}/content", headers=headers, stream=True
         )
 
         async def part_gen():
             yield part
 
         return FileAsyncContent(part_gen())
+
+    async def create_session(self, part_size: int) -> "SessionRefView":
+        """Create an upload session.
+
+        Note:
+            Calls `POST /filebox/sessions`.
+        Args:
+            part_size: The size of file parts.
+        Return:
+            The reference to the created session.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+        """
+
+        body = {"partSize": part_size}
+        r = await self._connector.do_post(path=_SESSIONS_PATH, json=body)
+        return SessionRefView(r.json())
+
+    async def upload_session_part(
+        self, part: AsyncBytesReader, *, session_id: uuid.UUID, part_number, size: int
+    ):
+        """Upload the file part.
+
+        Note:
+            Calls `POST /filebox/sessions/{sessionID}/parts`.
+        Args:
+            part: The file part data.
+            session_id: The identifier of the upload session.
+            part_number: The part number.
+            size: The part size.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+            :class:`~cybsi.cloud.error.NotFoundError`: File not found.
+            :class:`~cybsi.cloud.error.RequestEntityTooLargeError`:
+                Provided file data is too large.
+        """
+
+        path = f"{_SESSIONS_PATH}/{session_id}/parts"
+        form = {
+            "number": str(part_number),
+            "partSize": str(size),
+            "filePart": AsyncStreamWrapper(part, size),
+        }
+        await self._connector.do_put(path, files=form)
+
+    async def complete_session(self, session_id: uuid.UUID) -> "FileRefView":
+        """Complete the session.
+
+        Note:
+            Calls `POST /filebox/sessions/{sessionID}/completed`.
+        Args:
+            session_id: The identifier of the upload session.
+        Return:
+            The reference to the uploaded file.
+        Raises:
+            :class:`~cybsi.cloud.error.InvalidRequestError`:
+                Provided values are invalid (see args value requirements).
+            :class:`~cybsi.cloud.error.NotFoundError`: File not found.
+            :class:`~cybsi.cloud.error.SemanticError`: Semantic request error.
+        Note:
+            Semantic error codes specific for this method:
+              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidFilePart`
+              * :attr:`~cybsi.cloud.error.SemanticErrorCodes.InvalidFilePart`
+        """
+
+        path = f"{_SESSIONS_PATH}/{session_id}/completed"
+        r = await self._connector.do_post(path=path)
+        return FileRefView(r.json())
 
     async def download(self, file_id: uuid.UUID) -> "FileAsyncContent":
         """Download a file entirely.
@@ -237,7 +429,7 @@ class FilesAsyncAPI(BaseAsyncAPI):
 
         headers = {_RANGE_HEADER: f"bytes=0-{_DEFAULT_PART_SIZE}"}
         first_part = await self._connector.do_get(
-            path=f"{_PATH}/{file_id}/content", headers=headers, stream=True
+            path=f"{_FILES_PATH}/{file_id}/content", headers=headers, stream=True
         )
 
         async def parts_iter() -> AsyncIterator[Response]:
@@ -251,7 +443,7 @@ class FilesAsyncAPI(BaseAsyncAPI):
                 start, end = end + 1, end + _DEFAULT_PART_SIZE
                 h = {"Range": f"bytes={start}-{end}"}
                 chunk = await self._connector.do_get(
-                    path=f"{_PATH}/{file_id}/content", headers=h, stream=True
+                    path=f"{_FILES_PATH}/{file_id}/content", headers=h, stream=True
                 )
                 yield chunk
 
@@ -426,16 +618,16 @@ class FileRefView(JsonObjectView):
     @property
     def id(self) -> uuid.UUID:
         """File ID."""
-        return self._get("fileID")
+        return uuid.UUID(self._get("fileID"))
 
 
-class BytesReader(Protocol):
-    """Describes a bytes reader protocol"""
+class SessionRefView(JsonObjectView):
+    """Upload session reference view."""
 
-    @abstractmethod
-    def read(self, *args, **kwargs) -> bytes:
-        """Read bytes."""
-        ...
+    @property
+    def id(self) -> uuid.UUID:
+        """Session ID."""
+        return uuid.UUID(self._get("sessionID"))
 
 
 def _parse_content_range(header: str) -> Tuple[int, int, int]:
@@ -452,3 +644,41 @@ def _parse_content_range(header: str) -> Tuple[int, int, int]:
         return int(start.strip()), int(end.strip()), int(size.strip())
     except ValueError as exp:
         raise CybsiError("invalid content range") from exp
+
+
+def _iter_parts(
+    source: BytesReader, part_size: int, total_size=-1
+) -> Iterator[Tuple[BytesReader, int]]:
+    # if total size is not specified the buffer size would be equal to part size.
+    buf_size = 1 if total_size > 0 else part_size
+    buf = BufferedReader(source, size=buf_size)
+
+    part_number = 0
+    while peeked := buf.peek(buf_size):
+        if total_size < 0:
+            size = len(peeked)
+            yield LimitedReader(buf, limit=size), size
+        else:
+            part_number += 1
+            rest = total_size - (part_number * part_size)
+            size = part_size if rest > 0 else total_size % part_size
+            yield LimitedReader(buf, limit=size), size
+
+
+async def _aiter_parts(
+    source: AsyncBytesReader, part_size: int, total_size=-1
+) -> AsyncIterator[Tuple[AsyncBytesReader, int]]:
+    # if total size is not specified the buffer size would be equal to part size.
+    buf_size = 1 if total_size > 0 else part_size
+    buf = AsyncBufferedReader(source, size=buf_size)
+
+    part_number = 0
+    while peeked := (await buf.peek(buf_size)):
+        if total_size < 0:
+            size = len(peeked)
+            yield AsyncLimitedReader(buf, limit=size), size
+        else:
+            part_number += 1
+            rest = total_size - (part_number * part_size)
+            size = part_size if rest > 0 else total_size % part_size
+            yield AsyncLimitedReader(buf, limit=size), size
