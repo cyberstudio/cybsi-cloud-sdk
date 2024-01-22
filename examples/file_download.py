@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     with Client(config) as client:
         with open("/tmp/out.dat", "wb") as f:
-            with client.filebox.files.download(file_id) as content:
+            with client.files.download(file_id) as content:
                 buf = content.read(buf_size)
                 while buf:
                     f.write(buf)
