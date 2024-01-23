@@ -1,5 +1,6 @@
 from ..internal import BaseAPI, BaseAsyncAPI
 from .schemas import SchemaAPI, SchemaAsyncAPI
+from .task_queue import TaskQueueAPI, TaskQueueAsyncAPI
 from .tasks import TaskAPI, TaskAsyncAPI
 
 
@@ -16,6 +17,11 @@ class InsightAPI(BaseAPI):
         """Get Insight task handle."""
         return TaskAPI(self._connector)
 
+    @property
+    def task_queue(self) -> TaskQueueAPI:
+        """Get Insight task queue handle."""
+        return TaskQueueAPI(self._connector)
+
 
 class InsightAsyncAPI(BaseAsyncAPI):
     """Insight asynchronous API."""
@@ -29,3 +35,8 @@ class InsightAsyncAPI(BaseAsyncAPI):
     def tasks(self) -> TaskAsyncAPI:
         """Tasks asynchronous API handle."""
         return TaskAsyncAPI(self._connector)
+
+    @property
+    def task_queue(self) -> TaskQueueAsyncAPI:
+        """Task queue asynchronous API handle."""
+        return TaskQueueAsyncAPI(self._connector)
