@@ -8,6 +8,7 @@ Release History
 - Add insight schemas API
 - Add filebox API 
 - Add enrichment tasks API
+- Add enrichment task queue API
 
 1.0.8 (2023-12-06)
 ------------------
