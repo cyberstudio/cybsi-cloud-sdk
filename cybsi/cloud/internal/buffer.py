@@ -57,7 +57,7 @@ class BufferedReader:
         if self._buffered == 0:
             return self._source.read(n)
 
-        chunk = self._buf.read(n)
+        chunk = self._buf.read(min(n, self._buffered))
         self._r += len(chunk)
 
         if self._buffered == 0 and len(chunk) < n:
@@ -152,7 +152,7 @@ class AsyncBufferedReader:
         if self._buffered == 0:
             return await self._source.read(n)
 
-        chunk = self._buf.read(n)
+        chunk = self._buf.read(min(n, self._buffered))
         self._r += len(chunk)
 
         if self._buffered == 0 and len(chunk) < n:
