@@ -10,5 +10,5 @@ if __name__ == "__main__":
     config = Config(api_key="the cryptic string")
     with Client(config) as client:
         with open(file_path, "rb") as f:
-            ref = client.filebox.files.upload(f, name=f.name, size=size)
+            ref = client.files.upload(f, name=f.name, size=size)
             print(ref.id)

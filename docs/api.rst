@@ -49,9 +49,9 @@ Insight
     :imported-members:
     :inherited-members:
 
-Filebox
-~~~~~~~
-.. automodule:: cybsi.cloud.filebox
+Files
+~~~~~
+.. automodule:: cybsi.cloud.files
     :members:
     :imported-members:
     :inherited-members:
