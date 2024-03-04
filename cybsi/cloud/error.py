@@ -253,6 +253,12 @@ class SemanticErrorCodes(CybsiAPIEnum):
     FileNotFound = "FileNotFound"
     """File not found."""
 
+    # Tasks
+    TaskNotFound = "TaskNotFound"
+    """Task not found."""
+    InvalidState = "InvalidState"
+    """Invalid task state."""
+
 
 @document_enum
 class TooManyRequestsErrorCodes(CybsiAPIEnum):

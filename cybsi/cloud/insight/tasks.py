@@ -142,9 +142,9 @@ class TaskRegistrationView(JsonObjectView):
     """Task registration view"""
 
     @property
-    def id(self) -> str:
+    def id(self) -> uuid.UUID:
         """Task identifier."""
-        return self._get("taskID")
+        return uuid.UUID(self._get("taskID"))
 
 
 class ObjectKeyView(JsonObjectView):
@@ -195,9 +195,9 @@ class TaskView(JsonObjectView):
     """Task view"""
 
     @property
-    def id(self) -> str:
+    def id(self) -> uuid.UUID:
         """Task identifier."""
-        return self._get("taskID")
+        return uuid.UUID(self._get("id"))
 
     @property
     def params(self) -> TaskParamsView:
