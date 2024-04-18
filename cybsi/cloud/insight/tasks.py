@@ -225,7 +225,7 @@ class TaskView(JsonObjectView):
         Note:
             This value is present if task state is :attr:`~.TaskState.Failed`
         """
-        return TaskErrorView(self._get("result"))
+        return TaskErrorView(self._get("error"))
 
 
 class ObjectKeyForm(JsonObjectForm):
