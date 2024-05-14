@@ -210,22 +210,26 @@ class TaskView(JsonObjectView):
         return TaskState(self._get("state"))
 
     @property
-    def result(self) -> JsonObject:
+    def result(self) -> Optional[JsonObject]:
         """Task result.
 
         Note:
             This value is present if task state is :attr:`~.TaskState.Completed`
         """
-        return cast(JsonObject, self._get("result"))
+        if result := self._data.get("result", None):
+            return cast(JsonObject, result)
+        return None
 
     @property
-    def error(self) -> TaskErrorView:
+    def error(self) -> Optional[TaskErrorView]:
         """Task error.
 
         Note:
             This value is present if task state is :attr:`~.TaskState.Failed`
         """
-        return TaskErrorView(self._get("result"))
+        if error := self._data.get("error", None):
+            return TaskErrorView(error)
+        return None
 
 
 class ObjectKeyForm(JsonObjectForm):
