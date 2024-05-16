@@ -8,7 +8,7 @@ import sys
 sys.path.insert(0, os.path.abspath(".."))
 sys.path.insert(0, os.path.abspath("_themes"))
 
-import cybsi  # noqa: E402
+import cybsi.cloud  # noqa: E402
 
 # -- General configuration ------------------------------------------------
 extensions = [
@@ -40,8 +40,8 @@ master_doc = "index"
 project = u"Cybsi Cloud SDK"
 copyright = u"Cybsi Cloud developers"
 author = u"Cybsi Cloud developers"
-version = cybsi.__version__
-release = cybsi.__version__
+version = cybsi.cloud.__version__
+release = cybsi.cloud.__version__
 language = "en"
 
 # List of patterns, relative to source directory, that match files and

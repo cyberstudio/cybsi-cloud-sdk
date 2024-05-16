@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 import httpx
 
-from cybsi.__version__ import __version__
+from cybsi.cloud.__version__ import __version__
 
 from ..api import Tag
 from ..error import CybsiError, _raise_cybsi_error

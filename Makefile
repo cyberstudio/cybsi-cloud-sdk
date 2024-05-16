@@ -20,7 +20,7 @@ endif
 lint:
 	poetry run black $(SOURCE_DIRS)
 	poetry run flake8 $(SOURCE_DIRS)
-	poetry run mypy $(SOURCE_DIRS)
+	poetry run mypy $(SOURCE_DIRS) --explicit-package-bases
 	poetry run isort $(SOURCE_DIRS)
 
 .PHONY: test
