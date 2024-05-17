@@ -10,3 +10,12 @@ from .client import AsyncClient, Client
 from .client_config import Config, Timeouts, Limits
 
 from .enum import CybsiAPIEnum
+
+from .__version__ import (  # noqa: F401
+    __author__,
+    __author_email__,
+    __description__,
+    __license__,
+    __title__,
+    __version__,
+)

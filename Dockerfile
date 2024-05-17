@@ -15,7 +15,7 @@ RUN pip3 install -r ./docs/requirements.txt
 ARG POETRY_VERSION
 RUN pip3 install poetry==${POETRY_VERSION}
 COPY poetry.lock pyproject.toml README.md ./
-COPY ./cybsi/__version__.py ./cybsi/py.typed ./cybsi/
+COPY ./cybsi/cloud/__version__.py ./cybsi/cloud/py.typed ./cybsi/cloud/
 RUN poetry install
 
 
