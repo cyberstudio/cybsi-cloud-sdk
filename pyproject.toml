@@ -36,7 +36,7 @@ extend_skip = ["__init__.py"]
 [tool.tbump]
 
 [tool.tbump.version]
-current = "1.1.1"
+current = "1.1.2"
 
 regex = '''
   ^
@@ -57,7 +57,7 @@ tag_template = "v{new_version}"
 src = "pyproject.toml"
 
 [[tool.tbump.file]]
-src = "cybsi/__version__.py"
+src = "cybsi/cloud/__version__.py"
 
 [[tool.tbump.before_commit]]
 name = "Update changelog and check if it contains new version"
