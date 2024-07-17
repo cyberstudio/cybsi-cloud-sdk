@@ -1,5 +1,9 @@
 Release History
 ===============
+1.1.4 (2024-07-17)
+------------------
+- Retry requests when transport errors occurred
+
 1.1.3 (2024-05-17)
 ------------------
 

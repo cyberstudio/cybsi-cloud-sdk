@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from cybsi.cloud.internal import HTTPConnector, parse_rfc3339_timestamp, AsyncHTTPConnector
 
-from cybsi.cloud.client_config import DEFAULT_TIMEOUTS, DEFAULT_LIMITS
+from cybsi.cloud.client_config import _DEFAULT_TIMEOUTS, _DEFAULT_LIMITS, _DEFAULT_RETRY_COUNT
 from cybsi.cloud.insight import TaskQueueAPI, TaskQueueItemView, ObjectKeyView, ObjectType, ObjectKeyForm, \
     ObjectKeyType, TaskQueueAsyncAPI
 from tests import BaseTest, BaseAsyncTest
@@ -17,8 +17,9 @@ class TaskQueueAPITest(BaseTest):
             base_url=self.base_url,
             auth=None,
             ssl_verify=True,
-            timeouts=DEFAULT_TIMEOUTS,
-            limits=DEFAULT_LIMITS,
+            timeouts=_DEFAULT_TIMEOUTS,
+            limits=_DEFAULT_LIMITS,
+            retry=_DEFAULT_RETRY_COUNT,
         )
 
         self.task_queue_api = TaskQueueAPI(self.connector)
@@ -107,8 +108,9 @@ class TaskQueueAsyncAPITest(BaseAsyncTest):
             base_url=self.base_url,
             auth=None,
             ssl_verify=True,
-            timeouts=DEFAULT_TIMEOUTS,
-            limits=DEFAULT_LIMITS,
+            timeouts=_DEFAULT_TIMEOUTS,
+            limits=_DEFAULT_LIMITS,
+            retry=_DEFAULT_RETRY_COUNT,
         )
 
         self.task_queue_api = TaskQueueAsyncAPI(self.connector)

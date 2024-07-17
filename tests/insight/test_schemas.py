@@ -2,7 +2,7 @@ from typing import List, Any
 from unittest.mock import patch
 
 from cybsi.cloud import Tag
-from cybsi.cloud.client_config import DEFAULT_TIMEOUTS, DEFAULT_LIMITS
+from cybsi.cloud.client_config import _DEFAULT_TIMEOUTS, _DEFAULT_LIMITS, _DEFAULT_RETRY_COUNT
 from cybsi.cloud.insight import SchemaAPI
 from cybsi.cloud.internal import HTTPConnector
 from cybsi.cloud.pagination import chain_pages
@@ -16,8 +16,9 @@ class SchemasTest(BaseTest):
             base_url=self.base_url,
             auth=None,
             ssl_verify=True,
-            timeouts=DEFAULT_TIMEOUTS,
-            limits=DEFAULT_LIMITS,
+            timeouts=_DEFAULT_TIMEOUTS,
+            limits=_DEFAULT_LIMITS,
+            retry=_DEFAULT_RETRY_COUNT,
         )
         self.schemas_api = SchemaAPI(self.connector)
         self.schema_id = "test-schema"

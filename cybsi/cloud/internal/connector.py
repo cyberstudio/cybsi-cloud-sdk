@@ -1,3 +1,6 @@
+import asyncio
+import random
+import time
 from typing import Any, Optional
 
 import httpx
@@ -14,6 +17,7 @@ _BASIC_HEADERS = {
 }
 
 _IF_MATCH_HEADER = "If-Match"
+_IDEMPOTENT_HTTP_METHODS = ["GET", "HEAD", "PUT", "DELETE", "OPTIONS"]
 
 apply_async_multipart_stream()
 
@@ -28,6 +32,7 @@ class HTTPConnector:
         ssl_verify: bool,
         timeouts,
         limits,
+        retry,
     ):
         self._client = httpx.Client(
             auth=auth,
@@ -37,6 +42,7 @@ class HTTPConnector:
             timeout=timeouts._as_httpx_timeouts(),
             limits=limits._as_httpx_limits(),
         )
+        self._retry = retry
 
     def __enter__(self) -> "HTTPConnector":
         self._client.__enter__()
@@ -101,8 +107,28 @@ class HTTPConnector:
             :class:`~cybsi.cloud.error.APIError`: If response status code is >= 400
         """
         req = self._client.build_request(method, url=path, **kwargs)
+
+        def send_request():
+            if (
+                self._retry == 0
+                or method not in _IDEMPOTENT_HTTP_METHODS
+                or (
+                    method == "PUT"
+                    and not kwargs.get("json")  # can retry PUT only if body is json.
+                )
+            ):
+                return self._client.send(request=req, stream=stream)
+            for i in range(self._retry):
+                try:
+                    return self._client.send(request=req, stream=stream)
+                except (httpx.TransportError, httpx.ConnectError) as con_exp:
+                    if i + 1 < self._retry:
+                        time.sleep(random.randint(100, 1000) / 1000)
+                        continue
+                    raise con_exp
+
         try:
-            resp = self._client.send(request=req, stream=stream)
+            resp = send_request()
         except CybsiError:
             raise
         except httpx.TimeoutException as exp:
@@ -131,6 +157,7 @@ class AsyncHTTPConnector:
         ssl_verify: bool,
         timeouts,
         limits,
+        retry,
     ):
         self._client = httpx.AsyncClient(
             auth=auth,
@@ -140,6 +167,7 @@ class AsyncHTTPConnector:
             timeout=timeouts._as_httpx_timeouts(),
             limits=limits._as_httpx_limits(),
         )
+        self._retry = retry
 
     async def __aenter__(self) -> "AsyncHTTPConnector":
         await self._client.__aenter__()
@@ -204,8 +232,29 @@ class AsyncHTTPConnector:
             :class:`~cybsi.cloud.error.APIError`: If response status code is >= 400
         """
         req = self._client.build_request(method, url=path, **kwargs)
+
+        async def do():
+            if (
+                self._retry == 0
+                or method not in _IDEMPOTENT_HTTP_METHODS
+                or (
+                    method == "PUT"
+                    and not kwargs.get("json")  # can retry PUT only if body is json.
+                )
+            ):
+                return await self._client.send(request=req, stream=stream)
+
+            for i in range(self._retry):
+                try:
+                    return await self._client.send(request=req, stream=stream)
+                except (httpx.TransportError, httpx.ConnectError) as con_exp:
+                    if i + 1 < self._retry:
+                        await asyncio.sleep(random.randint(100, 1000) / 1000)
+                        continue
+                    raise con_exp
+
         try:
-            resp = await self._client.send(request=req, stream=stream)
+            resp = await do()
         except CybsiError:
             raise
         except httpx.TimeoutException as exp:

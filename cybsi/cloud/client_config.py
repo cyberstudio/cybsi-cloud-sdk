@@ -126,8 +126,9 @@ class Timeouts:
         )
 
 
-DEFAULT_TIMEOUTS = Timeouts(default=60.0)
-DEFAULT_LIMITS = Limits(max_connections=100, max_keepalive_connections=20)
+_DEFAULT_TIMEOUTS = Timeouts(default=60.0)
+_DEFAULT_RETRY_COUNT = 3
+_DEFAULT_LIMITS = Limits(max_connections=100, max_keepalive_connections=20)
 
 
 class Config:
@@ -141,6 +142,8 @@ class Config:
             on all operations.
         limits:  Configuration for limits to various client behaviors.
             Default configuration is max_connections=100, max_keepalive_connections=20.
+        retry: The count of sending request attempts
+            if a connection or transport error occurred.
     """
 
     def __init__(
@@ -149,11 +152,13 @@ class Config:
         api_key: str,
         api_url: str = "https://cybsi.cloud",
         ssl_verify: bool = True,
-        timeouts: Timeouts = DEFAULT_TIMEOUTS,
-        limits: Limits = DEFAULT_LIMITS,
+        timeouts: Timeouts = _DEFAULT_TIMEOUTS,
+        limits: Limits = _DEFAULT_LIMITS,
+        retry: int = _DEFAULT_RETRY_COUNT,
     ):
         self.api_key = api_key
         self.api_url = api_url
         self.ssl_verify = ssl_verify
         self.timeouts = timeouts
         self.limits = limits
+        self.retry = retry if retry > 0 else 0

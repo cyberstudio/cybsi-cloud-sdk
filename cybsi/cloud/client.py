@@ -51,6 +51,7 @@ class Client:
             ssl_verify=config.ssl_verify,
             timeouts=config.timeouts,
             limits=config.limits,
+            retry=config.retry,
         )
 
     def __enter__(self) -> "Client":
@@ -110,6 +111,7 @@ class AsyncClient:
             ssl_verify=config.ssl_verify,
             timeouts=config.timeouts,
             limits=config.limits,
+            retry=config.retry,
         )
 
     async def __aenter__(self) -> "AsyncClient":
