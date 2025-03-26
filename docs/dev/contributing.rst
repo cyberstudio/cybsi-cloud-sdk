@@ -25,7 +25,7 @@ The documentation files live in the ``docs/`` directory. Docs are written in
 documentation.
 
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
-.. _Sphinx: http://sphinx-doc.org/index.html
+.. _Sphinx: http://sphinx-doc.org
 
 Documentation tools update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
