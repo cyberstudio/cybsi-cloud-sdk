@@ -60,9 +60,12 @@ docker-clean:
 	docker rmi -f "$$(docker images -q $(DOCKER_IMAGE):$(DOCKER_TAG))"
 
 ################ Helper targets ################
-.PHONY: tools
-tools: #### Install tools needed for development.
+.PHONY: install-poetry
+install-poetry:
 	pip3 install poetry==${POETRY_VERSION}
+
+.PHONY: tools
+tools: install-poetry #### Install tools needed for development.
 	poetry install
 
 .PHONY: docs-tools
