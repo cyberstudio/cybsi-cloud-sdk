@@ -25,7 +25,7 @@ extensions = [
 # when checking the validity of anchors in links.
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-linkcheck_anchors_ignore
 linkcheck_anchors_ignore = [
-    "/artifacts/browse/tree/General/cybsi-cloud-pypi"  # anchor of link to pt artifactory
+    "/artifacts/browse/tree/General/cybsi-cloud-pypi"
 ]
 
 templates_path = ["_templates"]

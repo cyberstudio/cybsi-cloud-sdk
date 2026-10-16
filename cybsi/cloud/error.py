@@ -40,6 +40,19 @@ class CybsiError(Exception):
 JsonObject = Dict[str, Any]
 
 
+def _parse_error_content(resp: httpx.Response, fallback_code: str) -> JsonObject:
+    """Preserve HTTP errors when the response body is not a JSON object."""
+    try:
+        content = resp.json()
+    except ValueError:
+        pass
+    else:
+        if isinstance(content, dict):
+            return content
+
+    return {"code": fallback_code, "message": resp.text or "Empty response body"}
+
+
 class APIError(CybsiError):
     """Base exception for HTTP 4xx API responses."""
 
@@ -99,14 +112,22 @@ class UnauthorizedError(APIError):
     Unauthorized = "Unauthorized"
 
     def __init__(self, resp: httpx.Response) -> None:
-        super().__init__(401, resp.json(), header="operation not authorized")
+        super().__init__(
+            401,
+            _parse_error_content(resp, self.Unauthorized),
+            header="operation not authorized",
+        )
 
 
 class ForbiddenError(APIError):
     """Operation was forbidden. Retry will not work unless system is reconfigured."""
 
     def __init__(self, resp: httpx.Response) -> None:
-        super().__init__(403, resp.json(), header="operation forbidden")
+        super().__init__(
+            403,
+            _parse_error_content(resp, ForbiddenErrorCodes.Forbidden.value),
+            header="operation forbidden",
+        )
 
     @property
     def code(self) -> "ForbiddenErrorCodes":
@@ -183,7 +204,11 @@ class TooManyRequestsError(APIError):
     """
 
     def __init__(self, resp: httpx.Response) -> None:
-        super().__init__(429, resp.json(), header="too many requests error")
+        super().__init__(
+            429,
+            _parse_error_content(resp, TooManyRequestsErrorCodes.LimitExceeded.value),
+            header="too many requests error",
+        )
         retry_after = resp.headers.get("Retry-After")
         self._retry_after = int(retry_after) if retry_after is not None else None
 
