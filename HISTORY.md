@@ -1,5 +1,11 @@
 Release History
 ===============
+1.1.5 (2026-10-17)
+------------------
+
+- Preserve typed HTTP errors for 401, 403 and 429 responses with empty,
+  non-JSON or non-object JSON bodies.
+
 1.1.4 (2024-07-17)
 ------------------
 - Retry requests when transport errors occurred

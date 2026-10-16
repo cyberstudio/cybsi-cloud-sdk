@@ -141,7 +141,7 @@ autodoc_member_order = 'bysource'
 
 # -- Options for type hints in developer documentation ---------------------
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3/", None),
+    "python": ("https://docs.python.org/3.11/", None),
 }
 
 autodoc_typehints = 'none'
