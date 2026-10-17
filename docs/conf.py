@@ -25,7 +25,7 @@ extensions = [
 # when checking the validity of anchors in links.
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-linkcheck_anchors_ignore
 linkcheck_anchors_ignore = [
-    "/artifacts/browse/tree/General/cybsi-cloud-pypi"  # anchor of link to pt artifactory
+    "/artifacts/browse/tree/General/cybsi-cloud-pypi"
 ]
 
 templates_path = ["_templates"]
@@ -141,7 +141,7 @@ autodoc_member_order = 'bysource'
 
 # -- Options for type hints in developer documentation ---------------------
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3/", None),
+    "python": ("https://docs.python.org/3.11/", None),
 }
 
 autodoc_typehints = 'none'

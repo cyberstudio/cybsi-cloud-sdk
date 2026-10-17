@@ -7,6 +7,9 @@ DOCKER_TAG ?= latest
 VENV_DIR ?= .venv
 SOURCE_DIRS := cybsi examples # TODO: add tests
 POETRY_VERSION := 1.7.0
+# Keep Poetry environment helpers compatible with the minimum supported Python.
+VIRTUALENV_VERSION := 20.26.6
+PACKAGING_VERSION := 24.2
 
 # If the first argument is "bump-version"...
 ifeq (bump-version,$(firstword $(MAKECMDGOALS)))
@@ -62,7 +65,8 @@ docker-clean:
 ################ Helper targets ################
 .PHONY: install-poetry
 install-poetry:
-	pip3 install poetry==${POETRY_VERSION}
+	pip3 install poetry==${POETRY_VERSION} \
+		virtualenv==${VIRTUALENV_VERSION} packaging==${PACKAGING_VERSION}
 
 .PHONY: tools
 tools: install-poetry #### Install tools needed for development.
