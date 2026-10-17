@@ -147,11 +147,18 @@ def _request(
     ):
         if asynchronous:
             return asyncio.run(request_async())
-        with make_connector(HTTPConnector) as connector:
-            response = connector.do_get("/objects", stream=stream)
-            if paginate:
-                return Page(connector.do_get, response, dict).next_page()
-            return response
+        # Python 3.8/3.9 auth locks need a current loop even for sync requests.
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            with make_connector(HTTPConnector) as connector:
+                response = connector.do_get("/objects", stream=stream)
+                if paginate:
+                    return Page(connector.do_get, response, dict).next_page()
+                return response
+        finally:
+            asyncio.set_event_loop(None)
+            loop.close()
 
 
 @pytest.mark.parametrize("asynchronous", [False, True], ids=["sync", "async"])
